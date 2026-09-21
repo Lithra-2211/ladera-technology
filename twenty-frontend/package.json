@@ -1,0 +1,26 @@
+{
+    "private": true,
+    "workspaces": [
+        "packages/*"
+    ],
+    "name": "twenty-frontend-standalone",
+    "engines": {
+        "node": "^24.5.0",
+        "yarn": ">=4.0.2"
+    },
+    "scripts": {
+        "dev": "yarn workspace twenty-front run dev",
+        "build": "yarn workspaces foreach -R --topological-dev run build"
+    },
+    "resolutions": {
+        "@swc/core": "1.15.18"
+    },
+    "devDependencies": {
+        "@babel/preset-react": "^8.0.1"
+    },
+    "dependencies": {
+        "@hookform/resolvers": "^5.9.1",
+        "react-hook-form": "^7.87.0",
+        "zod": "^4.5.4"
+    }
+}
