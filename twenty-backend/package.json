@@ -1,0 +1,74 @@
+{
+  "name": "twenty-backend-project",
+  "private": true,
+  "license": "AGPL-3.0",
+  "packageManager": "yarn@4.13.0",
+  "workspaces": {
+    "packages": [
+      "packages/twenty-server",
+      "packages/twenty-emails",
+      "packages/twenty-client-sdk",
+      "packages/twenty-shared",
+      "packages/twenty-utils",
+      "packages/twenty-oxlint-rules"
+    ]
+  },
+  "scripts": {
+    "start": "npx nx start twenty-server",
+    "start:prod": "npx nx run twenty-server:start:prod",
+    "start:worker": "npx nx run twenty-server:worker:prod",
+    "build": "npx nx build twenty-server",
+    "build:shared": "npx nx build twenty-shared",
+    "test": "npx nx test twenty-server",
+    "test:integration": "npx nx run twenty-server:test:integration:with-db-reset",
+    "database:init": "npx nx run twenty-server:database:init:prod",
+    "database:migrate": "npx nx run twenty-server:database:migrate:prod",
+    "database:reset": "npx nx database:reset twenty-server",
+    "lint": "npx nx lint twenty-server",
+    "typecheck": "npx nx typecheck twenty-server"
+  },
+  "devDependencies": {
+    "@nx/jest": "22.7.8",
+    "@nx/js": "22.7.8",
+    "@yarnpkg/types": "^4.0.0",
+    "cross-env": "^10.1.0",
+    "nx": "22.7.8",
+    "oxfmt": "0.50.0",
+    "tsx": "^4.17.0",
+    "typescript": "~5.7.0"
+  },
+  "resolutions": {
+    "@module-federation/dts-plugin/undici": "^7.29.0",
+    "zapier-platform-core/form-data": "4.0.6",
+    "@remote-dom/react/@types/react": "^19.2.0",
+    "graphql": "16.8.1",
+    "graphql-redis-subscriptions/ioredis": "5.10.1",
+    "@types/qs": "6.9.16",
+    "@opentelemetry/api": "1.9.1",
+    "chokidar": "^3.6.0",
+    "tmp": "^0.2.7",
+    "@angular-devkit/core": "19.2.24",
+    "yeoman-environment": "6.0.1",
+    "express/qs": "6.15.2",
+    "googleapis/googleapis-common": "8.0.1",
+    "@cyntler/react-doc-viewer/ajv": "8.20.0",
+    "front-matter/js-yaml": "4.3.1",
+    "@lingui/cli/esbuild": "0.28.1",
+    "@opennextjs/aws/esbuild": "0.28.1",
+    "zapier-platform-cli/esbuild": "0.28.1",
+    "front-matter@npm:4.0.2": "patch:front-matter@npm%3A4.0.2#~/.yarn/patches/front-matter-npm-4.0.2-e1cc0efa69.patch",
+    "@react-email/ui/next": "16.3.2",
+    "zapier-platform-cli/adm-zip": "0.6.0",
+    "@module-federation/dts-plugin/adm-zip": "0.6.0",
+    "typescript": "~5.7.0",
+    "@swc/core": "1.15.11"
+  },
+  "engines": {
+    "node": "^24.5.0",
+    "npm": "please-use-yarn",
+    "yarn": ">=4.0.2"
+  },
+  "dependencies": {
+    "@nestjs/swagger": "11"
+  }
+}
