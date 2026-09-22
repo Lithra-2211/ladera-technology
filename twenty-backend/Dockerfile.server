@@ -4,7 +4,7 @@ WORKDIR /app
 
 RUN apk add --no-cache python3 make g++
 
-COPY package.json yarn.lock .yarnrc.yml tsconfig.base.json nx.json ./
+COPY package.json yarn.lock .yarnrc.yml tsconfig.base.json nx.json .prettierrc .oxfmtrc.jsonc ./
 COPY .yarn/releases ./.yarn/releases
 COPY .yarn/patches ./.yarn/patches
 
