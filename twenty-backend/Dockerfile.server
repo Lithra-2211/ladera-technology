@@ -8,10 +8,7 @@ COPY package.json yarn.lock .yarnrc.yml tsconfig.base.json nx.json ./
 COPY .yarn/releases ./.yarn/releases
 COPY .yarn/patches ./.yarn/patches
 
-COPY packages/twenty-shared ./packages/twenty-shared
-COPY packages/twenty-emails ./packages/twenty-emails
-COPY packages/twenty-client-sdk ./packages/twenty-client-sdk
-COPY packages/twenty-server ./packages/twenty-server
+COPY packages ./packages
 
 RUN yarn install --immutable
 RUN npx nx build twenty-shared
@@ -28,6 +25,8 @@ COPY --from=builder /app/.yarn /app/.yarn
 COPY --from=builder /app/node_modules /app/node_modules
 COPY --from=builder /app/packages/twenty-shared/dist /app/packages/twenty-shared/dist
 COPY --from=builder /app/packages/twenty-shared/package.json /app/packages/twenty-shared/
+COPY --from=builder /app/packages/twenty-client-sdk/dist /app/packages/twenty-client-sdk/dist
+COPY --from=builder /app/packages/twenty-client-sdk/package.json /app/packages/twenty-client-sdk/
 COPY --from=builder /app/packages/twenty-emails/dist /app/packages/twenty-emails/dist
 COPY --from=builder /app/packages/twenty-emails/package.json /app/packages/twenty-emails/
 COPY --from=builder /app/packages/twenty-server/dist /app/packages/twenty-server/dist
