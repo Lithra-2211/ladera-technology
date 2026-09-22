@@ -8,7 +8,7 @@ This document is for the **DevOps Engineer / Hosting Team** responsible for depl
 
 | Component | Technology | Recommended Azure Service | Notes |
 | :--- | :--- | :--- | :--- |
-| **Frontend** | React 19, Vite, Linaria | **Azure Static Web Apps** *(or Azure App Service / Docker)* | Pure Single-Page Application (SPA) |
+| **Frontend** | React 19, Vite, Linaria | **Azure Static Web Apps** | Pure Single-Page Application (SPA) |
 | **Backend** | NestJS 11, TypeORM, GraphQL | **Azure App Service (Linux Container)** *(or Azure Container Apps)* | Node.js REST & GraphQL API on port `3000` |
 | **Database** | PostgreSQL 16 | **Azure Database for PostgreSQL Flexible Server** | Relational data & schema |
 | **Cache & Queue** | Redis | **Upstash Redis (Free Tier)** *(or Docker `redis:7-alpine`)* | Required by backend BullMQ & cache engines |
@@ -83,15 +83,14 @@ In Azure App Service:
 
 ---
 
-## 4. Frontend Deployment
-
-### Method 1: Azure Static Web Apps (Recommended)
-This is the simplest, most performant, and cheapest option for the frontend.
+## 4. Frontend Deployment (Azure Static Web Apps)
+Azure Static Web Apps is the standard, optimized service for React/Vite SPAs with global CDN distribution and SSL.
 
 1. **Routing config**:
-   The routing fallback file has already been added at `packages/twenty-front/public/staticwebapp.config.json` to prevent 404s on browser refresh.
+   The routing fallback file is located at `twenty-frontend/packages/twenty-front/public/staticwebapp.config.json` to handle client-side routing and prevent 404s on browser refresh.
+
 2. **Configure Backend URL**:
-   In `twenty-frontend/packages/twenty-front/index.html`:
+   In `twenty-frontend/packages/twenty-front/index.html`, set the production backend URL:
    ```html
    <!-- BEGIN: Twenty Config -->
    <script id="twenty-env-config">
@@ -101,39 +100,20 @@ This is the simplest, most performant, and cheapest option for the frontend.
    </script>
    <!-- END: Twenty Config -->
    ```
-3. **Build Static Files**:
+
+3. **Build Static Production Assets**:
    ```bash
    cd twenty-frontend
    yarn install
    yarn workspace twenty-shared run build
    yarn workspace twenty-front run build
    ```
+
 4. **Deploy**:
-   - The compiled static files are in `twenty-frontend/packages/twenty-front/build`.
-   - Point your Azure Static Web App or GitHub Actions workflow to:
+   - The compiled static files are generated in `twenty-frontend/packages/twenty-front/build`.
+   - Point your Azure Static Web App configuration or deployment workflow to:
      - **App location**: `twenty-frontend`
      - **Output location**: `packages/twenty-front/build`
-
----
-
-### Method 2: Docker Container (Nginx)
-A production `twenty-frontend/Dockerfile` and `twenty-frontend/nginx.conf` have already been prepared.
-
-1. **Build the container**:
-   ```bash
-   cd twenty-frontend
-   docker build -t <acr_name>.azurecr.io/twenty-frontend:latest .
-   docker push <acr_name>.azurecr.io/twenty-frontend:latest
-   ```
-
-2. **Runtime Configuration**:
-   The container has a built-in entrypoint that can dynamically inject the backend URL without rebuilding!
-   Pass this environment variable to the container in Azure:
-   - `REACT_APP_SERVER_BASE_URL=https://<your-backend-url>`
-
-3. **Exposed Port**:
-   - Container listens on port `80`.
-   - In Azure App Service: set `WEBSITES_PORT=80`.
 
 ---
 
