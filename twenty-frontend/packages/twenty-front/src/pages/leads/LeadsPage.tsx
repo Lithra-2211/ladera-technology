@@ -2957,6 +2957,13 @@ const generateNextLeadId = (currentLeads: LeadItem[]) => {
   return `LD-${String(maxId + 1).padStart(4, '0')}`;
 };
 
+const ViewOnlyDetailItem = ({ label, value, fullWidth }: { label: string, value: any, fullWidth?: boolean }) => (
+  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', gridColumn: fullWidth ? 'span 2' : 'auto' }}>
+    <span style={{ fontSize: '11.5px', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</span>
+    <span style={{ fontSize: '14.5px', fontWeight: 600, color: '#0f172a', whiteSpace: 'pre-wrap', background: '#f8fafc', padding: '10px 14px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>{value || '-'}</span>
+  </div>
+);
+
 
 export const LeadsPage = () => {
   const setIsNavigationDrawerExpanded = useSetAtomState(isNavigationDrawerExpandedState);
@@ -2980,6 +2987,7 @@ export const LeadsPage = () => {
 
   // Modal & Form State
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isViewOnlyModal, setIsViewOnlyModal] = useState(false);
   const [editingLeadId, setEditingLeadId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
@@ -3416,6 +3424,7 @@ export const LeadsPage = () => {
   };
 
   const openCreateModal = () => {
+    setIsViewOnlyModal(false);
     setEditingLeadId(null);
     setApiError(null);
     setTouched({});
@@ -3453,7 +3462,13 @@ export const LeadsPage = () => {
     setIsModalOpen(true);
   };
 
+  const openViewModal = (lead: LeadItem) => {
+    openEditModal(lead);
+    setIsViewOnlyModal(true);
+  };
+
   const openEditModal = (lead: LeadItem) => {
+    setIsViewOnlyModal(false);
     const leadIdVal = lead.leadId || lead.id || '';
     setEditingLeadId(lead.id || leadIdVal);
     setApiError(null);
@@ -3935,6 +3950,10 @@ export const LeadsPage = () => {
                         <Td alignRight>
                           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <SecondaryButton style={{ padding: '6px 12px', color: '#0f172a', borderColor: '#e2e8f0', background: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }} onClick={() => openViewModal(lead)} title="View More">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                <span>View More</span>
+                              </SecondaryButton>
                               <SecondaryButton style={{ padding: '6px', color: '#2563eb', borderColor: '#bfdbfe', background: '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => openEditModal(lead)} title="Edit Lead">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                               </SecondaryButton>
@@ -4256,7 +4275,11 @@ export const LeadsPage = () => {
               <ModalHeaderBanner>
                 <ModalHeaderTitleGroup>
                   <ModalHeaderTitle>
-                    {editingLeadId ? `Edit Lead (${editingLeadId})` : 'Create New Lead'}
+                    {isViewOnlyModal
+                      ? `View Lead Details (${editingLeadId})`
+                      : editingLeadId
+                        ? `Edit Lead (${editingLeadId})`
+                        : 'Create New Lead'}
                   </ModalHeaderTitle>
                   <ModalHeaderSubtitle>
                     Ladera Technology
@@ -4273,13 +4296,64 @@ export const LeadsPage = () => {
               <ModalBody>
                 {apiError && <ErrorBanner>{apiError}</ErrorBanner>}
 
+                {isViewOnlyModal ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', paddingBottom: '20px' }}>
+                    <FormSectionTitle><span>🧑</span><span>1. Lead & Contact Information</span></FormSectionTitle>
+                    <FormGrid>
+                      <ViewOnlyDetailItem label="Lead ID" value={formData.leadId} />
+                      <ViewOnlyDetailItem label="Lead Name" value={formData.leadName} />
+                      <ViewOnlyDetailItem label="Company Name" value={formData.companyName} />
+                      <ViewOnlyDetailItem label="Job Title" value={formData.jobTitle} />
+                      <ViewOnlyDetailItem label="Email" value={formData.email} />
+                      <ViewOnlyDetailItem label="Phone Number" value={formData.phone} />
+                      <ViewOnlyDetailItem label="Date Captured" value={formData.dateCaptured} />
+                    </FormGrid>
+
+                    <FormSectionTitle><span>🏢</span><span>2. Business & Profiling</span></FormSectionTitle>
+                    <FormGrid>
+                      <ViewOnlyDetailItem label="Lead Source" value={formData.leadSource} />
+                      <ViewOnlyDetailItem label="Service Interest" value={formData.serviceInterest} />
+                      <ViewOnlyDetailItem label="Industry" value={formData.industry} />
+                      <ViewOnlyDetailItem label="Company Size" value={formData.companySize} />
+                    </FormGrid>
+
+                    <FormSectionTitle><span>📈</span><span>3. Deal & Pipeline Dynamics</span></FormSectionTitle>
+                    <FormGrid>
+                      <ViewOnlyDetailItem label="Pipeline Stage" value={formData.pipelineStage} />
+                      <ViewOnlyDetailItem label="Probability in %" value={formData.probability ? `${formData.probability}%` : ''} />
+                      <ViewOnlyDetailItem label="Lead Owner" value={formData.leadOwner} />
+                      <ViewOnlyDetailItem label="Estimated Deal Value" value={formData.estimatedDealValue} />
+                      <ViewOnlyDetailItem label="Expected Close Date" value={formData.expectedCloseDate} />
+                      <ViewOnlyDetailItem label="Days in Pipeline" value={formData.daysInPipeline} />
+                      <ViewOnlyDetailItem label="Status" value={formData.status} />
+                      {formData.pipelineStage === 'Lost' && <ViewOnlyDetailItem label="Lost Reason" value={formData.lostReason} />}
+                    </FormGrid>
+
+                    <FormSectionTitle><span>📅</span><span>4. Follow-up & Activity Tracking</span></FormSectionTitle>
+                    <FormGrid>
+                      <ViewOnlyDetailItem label="Last Contact Date" value={formData.lastContactDate} />
+                      <ViewOnlyDetailItem label="Next Follow-up Date" value={formData.nextFollowupDate} />
+                      <ViewOnlyDetailItem label="Follow up Notes" value={formData.followupNotes} fullWidth />
+                    </FormGrid>
+
+                    <ModalActions style={{ marginTop: '10px' }}>
+                      <SecondaryButton
+                        type="button"
+                        onClick={() => setIsModalOpen(false)}
+                      >
+                        Close Details
+                      </SecondaryButton>
+                    </ModalActions>
+                  </div>
+                ) : (
                 <form onSubmit={handleSaveLead} autoComplete="off" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                  <FormGrid>
-                    {/* SECTION 1: Lead & Contact Info */}
-                    <FormSectionTitle>
-                      <span>👤</span>
-                      <span>1. Lead & Contact Information</span>
-                    </FormSectionTitle>
+                  <fieldset disabled={isViewOnlyModal} style={{ border: 'none', margin: 0, padding: 0 }}>
+                    <FormGrid>
+                      {/* SECTION 1: Lead & Contact Info */}
+                      <FormSectionTitle>
+                        <span>🧑</span>
+                        <span>1. Lead & Contact Information</span>
+                      </FormSectionTitle>
 
                     {/* Lead ID (Only when editing an existing lead, full-width so it doesn't displace grid) */}
                     {editingLeadId && (
@@ -4455,9 +4529,6 @@ export const LeadsPage = () => {
                     <FormGroup style={{ position: 'relative' }}>
                       <FormLabel>
                         Service Interest <RequiredStar>*</RequiredStar>
-                        <span style={{ marginLeft: '6px', fontSize: '11px', color: '#6366f1', fontWeight: 600 }}>
-                          (Multi-select)
-                        </span>
                       </FormLabel>
                       <MultiSelectContainer ref={serviceDropdownRef}>
                         <MultiSelectTrigger
@@ -4584,9 +4655,6 @@ export const LeadsPage = () => {
                     <FormGroup>
                       <FormLabel>
                         Probability in %
-                        <span style={{ marginLeft: '6px', fontSize: '11px', color: '#6366f1', fontWeight: 600 }}>
-                          (Auto-set by stage)
-                        </span>
                       </FormLabel>
                       <FormSelect
                         name="probability"
@@ -4620,7 +4688,7 @@ export const LeadsPage = () => {
                     </FormGroup>
 
                     {/* 14. Estimated Deal Value (INR & AED dropdown with Auto USD Conversion) */}
-                    <FormGroup fullWidth>
+                    <FormGroup>
                       <FormLabel>
                         Estimated Deal Value
                         <span style={{ marginLeft: '6px', fontSize: '11px', color: '#10b981', fontWeight: 600 }}>
@@ -4670,7 +4738,7 @@ export const LeadsPage = () => {
                           }}
                         >
                           <span style={{ fontSize: '15px' }}>💵</span>
-                          <span style={{ fontWeight: 600 }}>Auto-converted to US Dollars:</span>
+                          <span style={{ fontWeight: 600 }}>Est US Dollars:</span>
                           <span
                             style={{
                               fontWeight: 700,
@@ -4708,9 +4776,6 @@ export const LeadsPage = () => {
                     <FormGroup>
                       <FormLabel>
                         Days in Pipeline
-                        <span style={{ marginLeft: '6px', fontSize: '11px', color: '#6366f1', fontWeight: 600 }}>
-                          (Manual type or auto)
-                        </span>
                       </FormLabel>
                       <FormInput
                         name="daysInPipeline"
@@ -4768,15 +4833,17 @@ export const LeadsPage = () => {
                     </FormGroup>
 
                     {/* 19. Lost Reason */}
-                    <FormGroup fullWidth>
-                      <FormLabel>Lost Reason (if lost or cold)</FormLabel>
-                      <FormInput
-                        name="lostReason"
-                        value={formData.lostReason}
-                        onChange={handleInputChange}
-                        placeholder="Enter reason if lost or cold (e.g. Budget constraint, Competitor chosen)..."
-                      />
-                    </FormGroup>
+                    {formData.pipelineStage === 'Lost' && (
+                      <FormGroup fullWidth>
+                        <FormLabel>Lost Reason</FormLabel>
+                        <FormInput
+                          name="lostReason"
+                          value={formData.lostReason}
+                          onChange={handleInputChange}
+                          placeholder="Enter reason if lost or cold (e.g. Budget constraint, Competitor chosen)..."
+                        />
+                      </FormGroup>
+                    )}
 
                     {/* 17. Follow up Notes */}
                     <FormGroup fullWidth>
@@ -4789,7 +4856,8 @@ export const LeadsPage = () => {
                         placeholder="Enter latest conversation notes, customer requirements, plywood grade preferences, or delivery timelines..."
                       />
                     </FormGroup>
-                  </FormGrid>
+                    </FormGrid>
+                  </fieldset>
 
                   <ModalActions>
                     <SecondaryButton
@@ -4797,13 +4865,16 @@ export const LeadsPage = () => {
                       disabled={isSaving}
                       onClick={() => setIsModalOpen(false)}
                     >
-                      Cancel
+                      {isViewOnlyModal ? 'Close' : 'Cancel'}
                     </SecondaryButton>
-                    <PrimaryButton type="submit" disabled={isSaving}>
-                      {isSaving ? 'Saving Lead...' : editingLeadId ? 'Update Lead' : 'Save Lead'}
-                    </PrimaryButton>
+                    {!isViewOnlyModal && (
+                      <PrimaryButton type="submit" disabled={isSaving}>
+                        {isSaving ? 'Saving Lead...' : editingLeadId ? 'Update Lead' : 'Save Lead'}
+                      </PrimaryButton>
+                    )}
                   </ModalActions>
                 </form>
+                )}
               </ModalBody>
             </ModalCard>
           </ModalOverlay>

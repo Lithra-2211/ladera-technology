@@ -14,7 +14,8 @@ import {
   IconCheck,
   IconBolt,
   IconChartBar,
-  IconSettings
+  IconSettings,
+  IconLogout
 } from 'twenty-ui/icon';
 
 import { NavigationDrawerSection } from '@/ui/navigation/navigation-drawer/components/NavigationDrawerSection';
@@ -87,6 +88,7 @@ export const MainNavigationDrawerScrollableItems = () => {
         <NavigationDrawerItem label="Automations" Icon={IconBolt} to="/automations" />
         <NavigationDrawerItem label="Reports" Icon={IconChartBar} to="/objects/dashboards" active={pathname.startsWith('/objects/dashboards')} />
         <NavigationDrawerItem label="Administration" Icon={IconSettings} to="/settings" />
+        <NavigationDrawerItem label="Logout" Icon={IconLogout} to="/welcome" />
       </NavigationDrawerSection>
 
     </StyledScrollableItemsContainer>
