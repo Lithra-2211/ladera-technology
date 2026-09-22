@@ -3950,9 +3950,8 @@ export const LeadsPage = () => {
                         <Td alignRight>
                           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                              <SecondaryButton style={{ padding: '6px 12px', color: '#0f172a', borderColor: '#e2e8f0', background: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }} onClick={() => openViewModal(lead)} title="View More">
+                              <SecondaryButton style={{ padding: '6px', color: '#0f172a', borderColor: '#e2e8f0', background: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => openViewModal(lead)} title="View More">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                                <span>View More</span>
                               </SecondaryButton>
                               <SecondaryButton style={{ padding: '6px', color: '#2563eb', borderColor: '#bfdbfe', background: '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => openEditModal(lead)} title="Edit Lead">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
