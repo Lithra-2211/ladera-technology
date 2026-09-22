@@ -11,7 +11,7 @@ This document is for the **DevOps Engineer / Hosting Team** responsible for depl
 | **Frontend** | React 19, Vite, Linaria | **Azure Static Web Apps** | Pure Single-Page Application (SPA) |
 | **Backend** | NestJS 11, TypeORM, GraphQL | **Azure App Service (Linux Container)** *(or Azure Container Apps)* | Node.js REST & GraphQL API on port `3000` |
 | **Database** | PostgreSQL 16 | **Azure Database for PostgreSQL Flexible Server** | Relational data & schema |
-| **Cache & Queue** | Redis | **Upstash Redis (Free Tier)** *(or Docker `redis:7-alpine`)* | Required by backend BullMQ & cache engines |
+| **Cache & Queue** | Redis (Embedded) | **Built-in to Backend Container** | No external Redis needed (Zero cost & zero setup) |
 
 ---
 
@@ -20,9 +20,8 @@ This document is for the **DevOps Engineer / Hosting Team** responsible for depl
 1. **PostgreSQL 16**:
    - Azure PostgreSQL Flexible Server (`B1ms` burstable is sufficient for low-to-medium usage).
    - Enable firewall rule: Allow public access from Azure services (or setup VNet integration).
-2. **Redis**:
-   - **Important**: Twenty backend strictly requires a Redis connection string for startup (BullMQ queues and caching).
-   - Cost-saving tip: Use [Upstash Redis](https://upstash.com/) (free tier, 10,000 requests/day, zero cost) or spin up a lightweight `redis:7-alpine` container.
+2. **Redis (SKIPPED)**:
+   - **No external Redis required!** The backend Docker container includes an embedded, lightweight Redis instance that starts automatically on `127.0.0.1:6379`.
 3. **Container Registry (if using Docker)**:
    - Azure Container Registry (ACR) or Docker Hub to push the backend container image.
 
@@ -43,7 +42,7 @@ Configure these in Azure App Service / Container App **Configuration > Applicati
 | `AUTH_COOKIE_SAME_SITE` | `none` | Required for cross-domain HTTPS cookies |
 | `AUTH_COOKIE_SECURE` | `true` | Required when `AUTH_COOKIE_SAME_SITE=none` |
 | `PG_DATABASE_URL` | `postgres://user:pass@host:5432/default?sslmode=require` | Azure PostgreSQL connection URL |
-| `REDIS_URL` | `rediss://default:pass@host:6379` | Redis connection URL |
+| `REDIS_URL` | `redis://127.0.0.1:6379` | Automatically defaults to embedded Redis (optional) |
 | `APP_SECRET` | *(Generate a 32+ character random string)* | Encryption key for auth tokens |
 | `STORAGE_TYPE` | `local` | Local file storage (or `azure` / `s3`) |
 

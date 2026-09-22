@@ -18,7 +18,7 @@ RUN npx nx build twenty-server
 FROM node:24.19.0-alpine3.23 AS runner
 WORKDIR /app
 
-RUN apk add --no-cache curl postgresql18-client
+RUN apk add --no-cache curl postgresql18-client redis
 
 COPY --from=builder /app/package.json /app/yarn.lock /app/.yarnrc.yml /app/
 COPY --from=builder /app/.yarn /app/.yarn
@@ -33,8 +33,13 @@ COPY --from=builder /app/packages/twenty-server/dist /app/packages/twenty-server
 COPY --from=builder /app/packages/twenty-server/package.json /app/packages/twenty-server/
 COPY --from=builder /app/packages/twenty-server/patches /app/packages/twenty-server/patches
 
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh
+
 WORKDIR /app/packages/twenty-server
 ENV NODE_ENV=production
+ENV REDIS_URL=redis://127.0.0.1:6379
 EXPOSE 3000
 
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
 CMD ["node", "dist/main"]
