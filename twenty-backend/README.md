@@ -53,4 +53,6 @@ AUTH_COOKIE_ALLOWED_ORIGINS=http://localhost:3001
 AUTH_COOKIE_SAME_SITE=lax
 PG_DATABASE_URL=postgres://twenty:twenty@localhost:5432/default
 REDIS_URL=redis://localhost:6379
+
+==
 ```
