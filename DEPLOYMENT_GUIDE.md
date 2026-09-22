@@ -68,7 +68,9 @@ cd twenty-backend
 docker build -f Dockerfile.server -t <acr_name>.azurecr.io/twenty-backend:latest .
 
 # 2. Login to Azure Container Registry
-az acr login --name <acr_name>
+docker login <acr_name>.azurecr.io
+# (Enter the username and password from your ACR Access Keys)
+# OR if Azure CLI is installed: az acr login --name <acr_name>
 
 # 3. Push image
 docker push <acr_name>.azurecr.io/twenty-backend:latest
@@ -119,7 +121,7 @@ Azure Static Web Apps is the standard, optimized service for React/Vite SPAs wit
 ## 5. Deployment Verification Checklist
 
 - [ ] PostgreSQL is accessible and `yarn database:init` completed without errors.
-- [ ] Redis URL is reachable (ping succeeds).
+- [ ] Backend container starts and embedded Redis initializes automatically (verified via container logs).
 - [ ] Backend is running at `https://<backend-host>/healthz` or returns HTTP 200 on root.
 - [ ] Frontend can make requests to `${REACT_APP_SERVER_BASE_URL}/metadata` and `${REACT_APP_SERVER_BASE_URL}/graphql`.
 - [ ] `AUTH_COOKIE_SAME_SITE=none` and `AUTH_COOKIE_SECURE=true` are active on the backend so login session cookies persist.
