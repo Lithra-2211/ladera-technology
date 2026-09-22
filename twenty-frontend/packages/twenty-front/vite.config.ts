@@ -60,9 +60,39 @@ export default defineConfig(({ mode }) => {
     console.log(`VITE_BUILD_SOURCEMAP: ${VITE_BUILD_SOURCEMAP}`);
   }
 
+  const resolveAtDynamicPlugin: PluginOption = {
+    name: 'resolve-at-dynamic',
+    enforce: 'pre',
+    resolveId(id, importer) {
+      if (id.startsWith('@/')) {
+        const rest = id.slice(2);
+        if (importer && importer.replace(/\\/g, '/').includes('/twenty-shared/')) {
+          return this.resolve(path.resolve(__dirname, '../twenty-shared/src', rest), importer, { skipSelf: true });
+        }
+        if (importer && importer.replace(/\\/g, '/').includes('/twenty-client-sdk/')) {
+          return this.resolve(path.resolve(__dirname, '../twenty-client-sdk/src', rest), importer, { skipSelf: true });
+        }
+        if (importer && importer.replace(/\\/g, '/').includes('/twenty-sdk/')) {
+          return this.resolve(path.resolve(__dirname, '../twenty-sdk/src', rest), importer, { skipSelf: true });
+        }
+        if (importer && importer.replace(/\\/g, '/').includes('/twenty-front-component-renderer/')) {
+          return this.resolve(path.resolve(__dirname, '../twenty-front-component-renderer/src', rest), importer, { skipSelf: true });
+        }
+        // default to twenty-front
+        return this.resolve(path.resolve(__dirname, 'src/modules', rest), importer, { skipSelf: true });
+      }
+    },
+  };
+
   return {
     root: __dirname,
     cacheDir: '../../node_modules/.vite/packages/twenty-front',
+
+    worker: {
+      plugins: () => [
+        resolveAtDynamicPlugin,
+      ],
+    },
 
     server: {
       port: port,
@@ -88,29 +118,7 @@ export default defineConfig(({ mode }) => {
     },
 
     plugins: [
-      {
-        name: 'resolve-at-dynamic',
-        enforce: 'pre',
-        resolveId(id, importer) {
-          if (id.startsWith('@/')) {
-            const rest = id.slice(2);
-            if (importer && importer.replace(/\\/g, '/').includes('/twenty-shared/')) {
-              return this.resolve(path.resolve(__dirname, '../twenty-shared/src', rest), importer, { skipSelf: true });
-            }
-            if (importer && importer.replace(/\\/g, '/').includes('/twenty-client-sdk/')) {
-              return this.resolve(path.resolve(__dirname, '../twenty-client-sdk/src', rest), importer, { skipSelf: true });
-            }
-            if (importer && importer.replace(/\\/g, '/').includes('/twenty-sdk/')) {
-              return this.resolve(path.resolve(__dirname, '../twenty-sdk/src', rest), importer, { skipSelf: true });
-            }
-            if (importer && importer.replace(/\\/g, '/').includes('/twenty-front-component-renderer/')) {
-              return this.resolve(path.resolve(__dirname, '../twenty-front-component-renderer/src', rest), importer, { skipSelf: true });
-            }
-            // default to twenty-front
-            return this.resolve(path.resolve(__dirname, 'src/modules', rest), importer, { skipSelf: true });
-          }
-        }
-      },
+      resolveAtDynamicPlugin,
       react({
         plugins: [['@lingui/swc-plugin', {}]],
       }),
