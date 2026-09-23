@@ -4309,7 +4309,7 @@ export const LeadsPage = () => {
                     <FormSectionTitle><span>📅</span><span>4. Follow-up & Activity Tracking</span></FormSectionTitle>
                     <FormGrid>
                       <ViewOnlyDetailItem label="Last Contact Date" value={formData.lastContactDate} />
-                      <ViewOnlyDetailItem label="Status" value={formData.status} />
+                      <ViewOnlyDetailItem label="Last Contact Status" value={formData.status} />
                       <ViewOnlyDetailItem label="Next Follow-up Date" value={formData.nextFollowupDate} />
                       <ViewOnlyDetailItem label="Follow up Notes" value={formData.followupNotes} fullWidth />
                     </FormGrid>
@@ -4760,7 +4760,7 @@ export const LeadsPage = () => {
                     {/* 18. Status */}
                     <FormGroup>
                       <FormLabel>
-                        Status <RequiredStar>*</RequiredStar>
+                        Last Contact Status <RequiredStar>*</RequiredStar>
                       </FormLabel>
                       <FormSelect
                         name="status"
