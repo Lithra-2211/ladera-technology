@@ -139,4 +139,11 @@ export class UpdateLeadDto {
   @IsOptional()
   @IsString()
   yetToCallNotes?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
+
+  @IsOptional()
+  newTimelineItem?: any;
 }

@@ -4,9 +4,20 @@ import { Pool } from 'pg';
 import { CreateLeadDto } from '../dtos/create-lead.dto';
 import { UpdateLeadDto } from '../dtos/update-lead.dto';
 
+export interface TimelineItem {
+  id: string;
+  date: string;
+  status: string;
+  callReason?: string;
+  notes?: string;
+  userName?: string;
+  createdAt: string;
+}
+
 export interface LeadEntity {
   id: string;
   leadId?: string;
+  isActive?: boolean;
   dateCaptured: string | null;
   leadName: string;
   jobTitle?: string | null;
@@ -45,6 +56,7 @@ export interface LeadEntity {
   initials: string;
   createdAt: Date;
   updatedAt: Date;
+  followupHistory?: TimelineItem[];
 }
 
 export interface LeadKpis {
@@ -273,6 +285,20 @@ export class LeadService implements OnModuleInit {
         ALTER TABLE public."LEAD" ADD COLUMN IF NOT EXISTS "Lost_Reason" VARCHAR(255);
         ALTER TABLE public."LEAD" ADD COLUMN IF NOT EXISTS "Days_In_Pipeline" INT;
         ALTER TABLE public."LEAD" ADD COLUMN IF NOT EXISTS "Job_Title" VARCHAR(255);
+        ALTER TABLE public."LEAD" ADD COLUMN IF NOT EXISTS "Is_Active" BOOLEAN NOT NULL DEFAULT TRUE;
+      `);
+
+      await this.pool.query(`
+        CREATE TABLE IF NOT EXISTS public."LEAD_TIMELINE" (
+          "Timeline_Id" VARCHAR(64) PRIMARY KEY,
+          "Lead_Id" VARCHAR(64) NOT NULL REFERENCES public."LEAD"("Lead_Id") ON DELETE CASCADE,
+          "Date" TIMESTAMPTZ NOT NULL,
+          "Status" VARCHAR(50),
+          "Call_Reason" VARCHAR(255),
+          "Notes" TEXT,
+          "User_Name" VARCHAR(255),
+          "Created_At" TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        );
       `);
 
       const checkRes = await this.pool.query('SELECT COUNT(*) FROM public."LEAD"');
@@ -359,6 +385,7 @@ export class LeadService implements OnModuleInit {
     return {
       id,
       leadId: id,
+      isActive: row.Is_Active ?? row.isActive ?? true,
       dateCaptured,
       leadName,
       jobTitle: row.Job_Title || row.jobTitle || null,
@@ -502,8 +529,28 @@ export class LeadService implements OnModuleInit {
       const res = await this.pool.query(
         'SELECT * FROM public."LEAD" ORDER BY "Created_At" DESC',
       );
+      
+      const timelineRes = await this.pool.query(
+        'SELECT * FROM public."LEAD_TIMELINE" ORDER BY "Date" DESC, "Created_At" DESC',
+      );
+
       if (res.rows && res.rows.length > 0) {
-        return res.rows.map(row => this.mapRowToEntity(row));
+        return res.rows.map(row => {
+          const entity = this.mapRowToEntity(row);
+          const history = timelineRes.rows
+            .filter(t => t.Lead_Id === entity.id)
+            .map(t => ({
+              id: t.Timeline_Id,
+              date: new Date(t.Date).toISOString().split('T')[0],
+              status: t.Status,
+              callReason: t.Call_Reason,
+              notes: t.Notes,
+              userName: t.User_Name,
+              createdAt: new Date(t.Created_At).toISOString(),
+            }));
+          entity.followupHistory = history;
+          return entity;
+        });
       }
     } catch (err) {
       this.logger.warn('Failed to fetch from public.LEAD, using fallback cache:', err);
@@ -517,8 +564,24 @@ export class LeadService implements OnModuleInit {
         'SELECT * FROM public."LEAD" WHERE LOWER("Lead_Id") = LOWER($1)',
         [id],
       );
+      
+      const timelineRes = await this.pool.query(
+        'SELECT * FROM public."LEAD_TIMELINE" WHERE LOWER("Lead_Id") = LOWER($1) ORDER BY "Date" DESC, "Created_At" DESC',
+        [id],
+      );
+
       if (res.rows && res.rows.length > 0) {
-        return this.mapRowToEntity(res.rows[0]);
+        const entity = this.mapRowToEntity(res.rows[0]);
+        entity.followupHistory = timelineRes.rows.map(t => ({
+          id: t.Timeline_Id,
+          date: new Date(t.Date).toISOString().split('T')[0],
+          status: t.Status,
+          callReason: t.Call_Reason,
+          notes: t.Notes,
+          userName: t.User_Name,
+          createdAt: new Date(t.Created_At).toISOString(),
+        }));
+        return entity;
       }
     } catch (err) {
       this.logger.warn(`Failed to find lead ${id} in database:`, err);
@@ -673,6 +736,27 @@ export class LeadService implements OnModuleInit {
         newLead.jobTitle || null,
       ];
       await this.pool.query(insertQuery, values);
+      
+      if (createLeadDto.newTimelineItem) {
+        const t = createLeadDto.newTimelineItem;
+        await this.pool.query(
+          `INSERT INTO public."LEAD_TIMELINE" 
+          ("Timeline_Id", "Lead_Id", "Date", "Status", "Call_Reason", "Notes", "User_Name", "Created_At")
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+          [
+            t.id, 
+            nextId, 
+            t.date ? new Date(t.date) : new Date(), 
+            t.status || 'New', 
+            t.callReason || null, 
+            t.notes || null, 
+            t.userName || null, 
+            t.createdAt ? new Date(t.createdAt) : new Date()
+          ]
+        );
+        newLead.followupHistory = [t];
+      }
+
       this.logger.log(`Persisted lead ${nextId} with 21 CRM attributes into PostgreSQL public."LEAD" table!`);
     } catch (dbErr) {
       this.logger.error(`Failed to insert lead ${nextId} into PostgreSQL:`, dbErr);
@@ -737,6 +821,7 @@ export class LeadService implements OnModuleInit {
       ...existing,
       id: existing.id,
       leadId: existing.id,
+      isActive: updateLeadDto.isActive !== undefined ? updateLeadDto.isActive : (existing.isActive ?? true),
       dateCaptured,
       leadName,
       jobTitle,
@@ -811,8 +896,9 @@ export class LeadService implements OnModuleInit {
           "Lost_Reason" = $30,
           "Days_In_Pipeline" = $31,
           "Updated_At" = $32,
-          "Job_Title" = $33
-        WHERE LOWER("Lead_Id") = LOWER($34)
+          "Job_Title" = $33,
+          "Is_Active" = $34
+        WHERE LOWER("Lead_Id") = LOWER($35)
         RETURNING *;
       `;
       const values = [
@@ -849,9 +935,35 @@ export class LeadService implements OnModuleInit {
         updatedLead.daysInPipeline || 0,
         updatedLead.updatedAt,
         updatedLead.jobTitle || null,
+        updatedLead.isActive,
         id,
       ];
       await this.pool.query(updateQuery, values);
+      
+      if (updateLeadDto.newTimelineItem) {
+        const t = updateLeadDto.newTimelineItem;
+        await this.pool.query(
+          `INSERT INTO public."LEAD_TIMELINE" 
+          ("Timeline_Id", "Lead_Id", "Date", "Status", "Call_Reason", "Notes", "User_Name", "Created_At")
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+          [
+            t.id, 
+            existing.id, 
+            t.date ? new Date(t.date) : new Date(), 
+            t.status || 'New', 
+            t.callReason || null, 
+            t.notes || null, 
+            t.userName || null, 
+            t.createdAt ? new Date(t.createdAt) : new Date()
+          ]
+        );
+        
+        if (!updatedLead.followupHistory) {
+          updatedLead.followupHistory = [];
+        }
+        updatedLead.followupHistory.unshift(t);
+      }
+      
       this.logger.log(`Updated lead ${id} with 20 CRM attributes in PostgreSQL public."LEAD" table.`);
     } catch (dbErr) {
       this.logger.error(`Failed to update lead ${id} in PostgreSQL:`, dbErr);
@@ -870,17 +982,17 @@ export class LeadService implements OnModuleInit {
   async delete(id: string): Promise<{ success: boolean; id: string }> {
     try {
       await this.pool.query(
-        'DELETE FROM public."LEAD" WHERE LOWER("Lead_Id") = LOWER($1)',
+        'UPDATE public."LEAD" SET "Is_Active" = FALSE WHERE LOWER("Lead_Id") = LOWER($1)',
         [id],
       );
-      this.logger.log(`Deleted lead ${id} from PostgreSQL public."LEAD" table.`);
+      this.logger.log(`Soft-deleted lead ${id} in PostgreSQL public."LEAD" table.`);
     } catch (dbErr) {
-      this.logger.error(`Failed to delete lead ${id} in PostgreSQL:`, dbErr);
+      this.logger.error(`Failed to soft-delete lead ${id} in PostgreSQL:`, dbErr);
     }
 
-    const index = this.leadsStore.findIndex(l => l.id.toLowerCase() === id.toLowerCase());
-    if (index !== -1) {
-      this.leadsStore.splice(index, 1);
+    const lead = this.leadsStore.find(l => l.id.toLowerCase() === id.toLowerCase());
+    if (lead) {
+      lead.isActive = false;
     }
 
     return { success: true, id };

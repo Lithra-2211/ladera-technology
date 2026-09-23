@@ -139,4 +139,7 @@ export class CreateLeadDto {
   @IsOptional()
   @IsString()
   yetToCallNotes?: string;
+
+  @IsOptional()
+  newTimelineItem?: any;
 }
