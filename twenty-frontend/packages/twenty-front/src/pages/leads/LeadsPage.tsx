@@ -1840,45 +1840,6 @@ const getLeadDefaultTimeline = (lead: any): FollowupTimelineItem[] => {
     return match.followupHistory;
   }
 
-  const req = lead?.requirement || 'Enterprise IT Infrastructure';
-  const name = lead?.leadName || lead?.companyName || 'Client';
-  const rep = lead?.leadOwner || lead?.assignedSalesUser || 'Aravind';
-  const nextDate = lead?.nextFollowupDate || '2026-09-16';
-  const isNew = (lead?.status || lead?.stage) === 'New';
-  const currentStatus = lead?.followupStatus || (isNew ? 'Yet to Call' : 'Connected');
-  const source = lead?.leadSource || lead?.source || 'Website';
-
-  return [
-    {
-      id: `FL-${lead?.id || 'lead'}-1`,
-      date: nextDate,
-      status: currentStatus,
-      callReason: lead?.callReason || (isNew ? 'Initial Qualification & Discovery' : 'Quotation & Price Estimation'),
-      notes: isNew
-        ? (lead?.yetToCallNotes || `Lead received from ${source}. Scheduled for initial discovery call.`)
-        : `Review proposal, volume pricing, and delivery timeline for ${req}.`,
-      createdAt: '2026-09-15T11:00:00.000Z',
-      userName: rep,
-    },
-    {
-      id: `FL-${lead?.id || 'lead'}-2`,
-      date: '2026-09-11',
-      status: 'Connected',
-      callReason: 'Product Catalog & Sample Request',
-      notes: `Shared service proposal, technical architecture deck, and discounted estimate with ${name}.`,
-      createdAt: '2026-09-11T14:30:00.000Z',
-      userName: rep,
-    },
-    {
-      id: `FL-${lead?.id || 'lead'}-3`,
-      date: '2026-09-07',
-      status: 'Rescheduled',
-      callReason: 'Site Measurement Coordination',
-      notes: `Site measurement session postponed upon client request; samples dispatched to site office.`,
-      createdAt: '2026-09-07T16:15:00.000Z',
-      userName: 'Aravind',
-    },
-    {
       id: `FL-${lead?.id || 'lead'}-4`,
       date: '2026-09-02',
       status: 'Yet to Call',
