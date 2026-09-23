@@ -1,4 +1,4 @@
-import { useSetAtomState } from '@/ui/utilities/state/jotai/hooks/useSetAtomState';
+﻿import { useSetAtomState } from '@/ui/utilities/state/jotai/hooks/useSetAtomState';
 import { isNavigationDrawerExpandedState } from '@/ui/navigation/states/isNavigationDrawerExpanded';
 import { PageTitle } from '@/ui/utilities/page-title/components/PageTitle';
 import { styled } from '@linaria/react';
@@ -88,7 +88,7 @@ const INITIAL_LEADS: LeadItem[] = [
     companySize: '1-10 Employees',
     pipelineStage: 'Attempted to Contact',
     leadOwner: 'Aravind',
-    estimatedDealValue: '₹68K',
+    estimatedDealValue: 'â‚¹68K',
     probability: 10,
     expectedCloseDate: '2026-09-30',
     lastContactDate: '2026-09-12',
@@ -104,8 +104,8 @@ const INITIAL_LEADS: LeadItem[] = [
     avatarTone: 'violet',
     source: 'Website',
     stage: 'New',
-    requirement: 'Sofa set · 3+1+1',
-    estValue: '₹68K',
+    requirement: 'Sofa set Â· 3+1+1',
+    estValue: 'â‚¹68K',
     score: 'B',
     createdAt: '2026-09-01T10:00:00.000Z',
     updatedAt: '2026-09-01T10:00:00.000Z',
@@ -152,7 +152,7 @@ const INITIAL_LEADS: LeadItem[] = [
     companySize: '11-50 Employees',
     pipelineStage: 'Meeting Completed',
     leadOwner: 'Pradeep',
-    estimatedDealValue: '₹4.8L',
+    estimatedDealValue: 'â‚¹4.8L',
     probability: 40,
     expectedCloseDate: '2026-10-15',
     lastContactDate: '2026-09-14',
@@ -169,7 +169,7 @@ const INITIAL_LEADS: LeadItem[] = [
     source: 'Partner',
     stage: 'Qualified',
     requirement: 'Enterprise Cyber Security Assessment',
-    estValue: '₹4.8L',
+    estValue: 'â‚¹4.8L',
     score: 'A',
     createdAt: '2026-09-02T11:30:00.000Z',
     updatedAt: '2026-09-02T11:30:00.000Z',
@@ -208,7 +208,7 @@ const INITIAL_LEADS: LeadItem[] = [
     companySize: '1-10 Employees',
     pipelineStage: 'SQL',
     leadOwner: 'Sharmila',
-    estimatedDealValue: '₹1.1L',
+    estimatedDealValue: 'â‚¹1.1L',
     probability: 30,
     expectedCloseDate: '2026-09-28',
     lastContactDate: '2026-09-11',
@@ -224,8 +224,8 @@ const INITIAL_LEADS: LeadItem[] = [
     avatarTone: 'amber',
     source: 'Cold Call',
     stage: 'Contacted',
-    requirement: 'Beds ×2 · engineered wood',
-    estValue: '₹1.1L',
+    requirement: 'Beds Ã—2 Â· engineered wood',
+    estValue: 'â‚¹1.1L',
     score: 'A',
     createdAt: '2026-09-03T09:15:00.000Z',
     updatedAt: '2026-09-03T09:15:00.000Z',
@@ -264,7 +264,7 @@ const INITIAL_LEADS: LeadItem[] = [
     companySize: '51-200 Employees',
     pipelineStage: 'Negotiation',
     leadOwner: 'Shanti',
-    estimatedDealValue: '₹18.5L',
+    estimatedDealValue: 'â‚¹18.5L',
     probability: 90,
     expectedCloseDate: '2026-10-31',
     lastContactDate: '2026-09-16',
@@ -280,8 +280,8 @@ const INITIAL_LEADS: LeadItem[] = [
     avatarTone: 'teal',
     source: 'Referral',
     stage: 'Qualified',
-    requirement: 'Full-home furniture · 12 villas',
-    estValue: '₹18.5L',
+    requirement: 'Full-home furniture Â· 12 villas',
+    estValue: 'â‚¹18.5L',
     score: 'A',
     createdAt: '2026-09-04T14:20:00.000Z',
     updatedAt: '2026-09-04T14:20:00.000Z',
@@ -320,7 +320,7 @@ const INITIAL_LEADS: LeadItem[] = [
     companySize: '1-10 Employees',
     pipelineStage: 'Lost',
     leadOwner: 'Brijesh',
-    estimatedDealValue: '₹54K',
+    estimatedDealValue: 'â‚¹54K',
     probability: 0,
     expectedCloseDate: '2026-09-25',
     lastContactDate: '2026-09-20',
@@ -336,8 +336,8 @@ const INITIAL_LEADS: LeadItem[] = [
     avatarTone: 'slate',
     source: 'Trade Show / Event',
     stage: 'Cold',
-    requirement: 'Dining set · 6 seater',
-    estValue: '₹54K',
+    requirement: 'Dining set Â· 6 seater',
+    estValue: 'â‚¹54K',
     score: 'B',
     createdAt: '2026-09-05T16:45:00.000Z',
     updatedAt: '2026-09-05T16:45:00.000Z',
@@ -376,7 +376,7 @@ const INITIAL_LEADS: LeadItem[] = [
     companySize: '51-200 Employees',
     pipelineStage: 'Proposal Sent',
     leadOwner: 'Client Reference',
-    estimatedDealValue: '₹5.6L',
+    estimatedDealValue: 'â‚¹5.6L',
     probability: 70,
     expectedCloseDate: '2026-10-10',
     lastContactDate: '2026-09-13',
@@ -393,7 +393,7 @@ const INITIAL_LEADS: LeadItem[] = [
     source: 'Email Campaign',
     stage: 'Contacted',
     requirement: 'Site office furniture',
-    estValue: '₹5.6L',
+    estValue: 'â‚¹5.6L',
     score: 'A',
     createdAt: '2026-09-06T12:00:00.000Z',
     updatedAt: '2026-09-06T12:00:00.000Z',
@@ -2568,7 +2568,7 @@ const SALES_USERS = [
 ];
 
 const formatDateDisplay = (dateStr?: string | null) => {
-  if (!dateStr) return '—';
+  if (!dateStr) return 'â€”';
   try {
     const d = new Date(dateStr);
     if (isNaN(d.getTime())) return dateStr;
@@ -2745,15 +2745,15 @@ interface DealValueOption {
 }
 
 const INR_DEAL_VALUE_OPTIONS: DealValueOption[] = [
-  { label: '₹50,000 (₹50K)', amount: 50000 },
-  { label: '₹1,00,000 (₹1L)', amount: 100000 },
-  { label: '₹2,00,000 (₹2L)', amount: 200000 },
-  { label: '₹2,50,000 (₹2.5L)', amount: 250000 },
-  { label: '₹5,00,000 (₹5L)', amount: 500000 },
-  { label: '₹10,00,000 (₹10L)', amount: 1000000 },
-  { label: '₹25,00,000 (₹25L)', amount: 2500000 },
-  { label: '₹50,00,000 (₹50L)', amount: 5000000 },
-  { label: '₹1,00,00,000 (₹1 Cr)', amount: 10000000 },
+  { label: 'â‚¹50,000 (â‚¹50K)', amount: 50000 },
+  { label: 'â‚¹1,00,000 (â‚¹1L)', amount: 100000 },
+  { label: 'â‚¹2,00,000 (â‚¹2L)', amount: 200000 },
+  { label: 'â‚¹2,50,000 (â‚¹2.5L)', amount: 250000 },
+  { label: 'â‚¹5,00,000 (â‚¹5L)', amount: 500000 },
+  { label: 'â‚¹10,00,000 (â‚¹10L)', amount: 1000000 },
+  { label: 'â‚¹25,00,000 (â‚¹25L)', amount: 2500000 },
+  { label: 'â‚¹50,00,000 (â‚¹50L)', amount: 5000000 },
+  { label: 'â‚¹1,00,00,000 (â‚¹1 Cr)', amount: 10000000 },
 ];
 
 const AED_DEAL_VALUE_OPTIONS: DealValueOption[] = [
@@ -2824,18 +2824,18 @@ const extractFollowupNotes = (lead: LeadItem): string => {
 
 const getStatusIcon = (status: string) => {
   const s = (status || '').toLowerCase();
-  if (s.includes('new')) return '✨';
-  if (s.includes('contacted')) return '📞';
-  if (s.includes('qualified')) return '🎯';
-  if (s.includes('proposal')) return '📄';
-  if (s.includes('negotiation')) return '🤝';
-  if (s.includes('won')) return '🎉';
-  if (s.includes('lost')) return '❌';
-  if (s.includes('cold')) return '❄️';
-  if (s.includes('yet')) return '⏳';
-  if (s.includes('connected')) return '📞';
-  if (s.includes('meeting')) return '🤝';
-  return '📅';
+  if (s.includes('new')) return 'âœ¨';
+  if (s.includes('contacted')) return 'ðŸ“ž';
+  if (s.includes('qualified')) return 'ðŸŽ¯';
+  if (s.includes('proposal')) return 'ðŸ“„';
+  if (s.includes('negotiation')) return 'ðŸ¤';
+  if (s.includes('won')) return 'ðŸŽ‰';
+  if (s.includes('lost')) return 'âŒ';
+  if (s.includes('cold')) return 'â„ï¸';
+  if (s.includes('yet')) return 'â³';
+  if (s.includes('connected')) return 'ðŸ“ž';
+  if (s.includes('meeting')) return 'ðŸ¤';
+  return 'ðŸ“…';
 };
 
 const formatRelativeTime = (dateStr: string) => {
@@ -2855,7 +2855,7 @@ const formatRelativeTime = (dateStr: string) => {
 
 const parseEstValueToAmount = (val?: string | null): { micros: number; numeric: number } => {
   if (!val) return { micros: 100000000000, numeric: 100000 };
-  const cleaned = val.replace(/^[₹$RsINR\s,]+/i, '').trim().toUpperCase();
+  const cleaned = val.replace(/^[â‚¹$RsINR\s,]+/i, '').trim().toUpperCase();
   let num = parseFloat(cleaned.replace(/,/g, '')) || 1;
   if (cleaned.endsWith('CR') || cleaned.endsWith('CRORE')) {
     num = num * 10000000;
@@ -2983,8 +2983,8 @@ export const DealsPage = () => {
 
   const handleOpenConvertModal = (lead: LeadItem) => {
     const defaultTitle = lead.companyName
-      ? `${lead.companyName} · ${lead.requirement || 'Modular Furniture Setup'}`
-      : `${lead.leadName} · ${lead.requirement || 'Furniture Order'}`;
+      ? `${lead.companyName} Â· ${lead.requirement || 'Modular Furniture Setup'}`
+      : `${lead.leadName} Â· ${lead.requirement || 'Furniture Order'}`;
       
     setDealFormName(defaultTitle);
     
@@ -3054,7 +3054,7 @@ export const DealsPage = () => {
         ),
       );
 
-      showToast(`🎉 Converted "${lead.companyName || lead.leadName}" to Deal! Opening Deals...`);
+      showToast(`ðŸŽ‰ Converted "${lead.companyName || lead.leadName}" to Deal! Opening Deals...`);
 
       setTimeout(() => {
         navigate('/objects/opportunities');
@@ -3304,8 +3304,8 @@ export const DealsPage = () => {
               stage: normalizedStage,
               leadOwner: l.leadOwner || l.assignedSalesUser || 'Aravind',
               assignedSalesUser: l.leadOwner || l.assignedSalesUser || 'Aravind',
-              estimatedDealValue: l.estimatedDealValue || l.estValue || '₹2.5L',
-              estValue: l.estimatedDealValue || l.estValue || '₹2.5L',
+              estimatedDealValue: l.estimatedDealValue || l.estValue || 'â‚¹2.5L',
+              estValue: l.estimatedDealValue || l.estValue || 'â‚¹2.5L',
               probability: prob,
               expectedCloseDate: l.expectedCloseDate || null,
               lastContactDate: l.lastContactDate || null,
@@ -3660,7 +3660,7 @@ export const DealsPage = () => {
           },
           ...prev,
         ]);
-        showToast(`🎉 Lead ${createdLead.leadId || createdLead.id || targetLeadId} created successfully!`);
+        showToast(`ðŸŽ‰ Lead ${createdLead.leadId || createdLead.id || targetLeadId} created successfully!`);
       }
 
       // Refresh KPIs
@@ -3763,7 +3763,7 @@ export const DealsPage = () => {
 
   return (
     <>
-      <PageTitle title="Leads — Ladera Technology" />
+      <PageTitle title="Leads â€” Ladera Technology" />
       <Container>
         {/* Toast Notification */}
         {toastMessage && (
@@ -3775,8 +3775,8 @@ export const DealsPage = () => {
         {/* Header Section */}
         <HeaderSection>
           <TitleGroup>
-            <Title>Leads</Title>
-            <Subtitle>Capture, score and qualify — every source feeds one funnel.</Subtitle>
+            <Title>Deals</Title>
+            <Subtitle>Capture, score and qualify â€” every source feeds one funnel.</Subtitle>
           </TitleGroup>
           <HeaderActions>
             <PrimaryButton onClick={openCreateModal}>+ New lead</PrimaryButton>
@@ -3785,7 +3785,7 @@ export const DealsPage = () => {
 
         {/* 4 KPI Metric Cards */}
         <MetricsGrid>
-          {/* Open Leads */}
+          {/* Open Deals */}
           <MetricCard>
             <MetricCardHeader>
               <MetricIconContainer bg="rgba(37, 99, 235, 0.1)" color="#2563eb">
@@ -3793,9 +3793,9 @@ export const DealsPage = () => {
               </MetricIconContainer>
               <MetricValue>{totalOpenCount}</MetricValue>
             </MetricCardHeader>
-            <MetricLabel>Open Leads</MetricLabel>
+            <MetricLabel>Open Deals</MetricLabel>
             <MetricFoot color="#10b981">
-              <span>↑</span>
+              <span>â†‘</span>
               <span>12% this week</span>
             </MetricFoot>
           </MetricCard>
@@ -3811,8 +3811,8 @@ export const DealsPage = () => {
               </MetricCardHeader>
               <MetricLabel>From {src.name}</MetricLabel>
               <MetricFoot color="#10b981">
-                <span>↑</span>
-                <span>{src.count} {src.count === 1 ? 'lead' : 'leads'} · {src.meta.tag}</span>
+                <span>â†‘</span>
+                <span>{src.count} {src.count === 1 ? 'lead' : 'leads'} Â· {src.meta.tag}</span>
               </MetricFoot>
             </MetricCard>
           ))}
@@ -3826,8 +3826,8 @@ export const DealsPage = () => {
                 <TrendingUpIcon />
               </TableIconContainer>
               <TableTitleGroup>
-                <TableTitle>Lead pipeline</TableTitle>
-                <TableSubtitle>All sources · Last 30 days</TableSubtitle>
+                <TableTitle>Deal Pipeline</TableTitle>
+                <TableSubtitle>All sources Â· Last 30 days</TableSubtitle>
               </TableTitleGroup>
             </TableHeadingGroup>
 
@@ -3899,120 +3899,96 @@ export const DealsPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredLeads.map((lead) => {
-                    const leadOwnerName = lead.leadOwner || lead.assignedSalesUser;
-  
-                    const phoneNum = lead.phone || lead.leadNumber || '--';
-                    const emailAddr = lead.email || lead.leadEmail || '--';
-  
-                    return (
-                      <Tr key={lead.id || lead.leadId}>
-                        <Td>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                            <div style={{ 
-                              width: '42px', height: '42px', borderRadius: '50%', 
-                              backgroundColor: '#e0f2fe', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 
-                            }}>
-                              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0284c7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><path d="M9 22v-4h6v4"></path><path d="M8 6h.01"></path><path d="M16 6h.01"></path><path d="M12 6h.01"></path><path d="M12 10h.01"></path><path d="M12 14h.01"></path><path d="M16 10h.01"></path><path d="M16 14h.01"></path><path d="M8 10h.01"></path><path d="M8 14h.01"></path></svg>
+                    {filteredLeads.map((lead) => {
+                      const dealOwnerName = lead.leadOwner || lead.assignedSalesUser || '--';
+                      const phoneNum = lead.phone || lead.leadNumber || '--';
+                      const emailAddr = lead.email || lead.leadEmail || '--';
+                      const dealAmount = lead.estimatedDealValue ? '₹' + Number(lead.estimatedDealValue).toLocaleString() : '₹0';
+                      const dealTitle = (lead.companyName ? lead.companyName + ' Deal' : lead.leadName + ' Deal');
+    
+                      return (
+                        <Tr key={lead.id || lead.leadId}>
+                          <Td>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                              <div style={{ 
+                                width: '42px', height: '42px', borderRadius: '50%', 
+                                backgroundColor: '#dcfce7', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 
+                              }}>
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                              </div>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                                  <span style={{ fontWeight: 600, color: '#0f172a', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                    {dealTitle}
+                                    {lead.isActive === false && (
+                                      <span style={{ fontSize: '10px', background: '#fee2e2', color: '#ef4444', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>DELETED</span>
+                                    )}
+                                  </span>
+                                  <span style={{ fontSize: '12.5px', color: '#64748b' }}>{lead.companyName || '--'}</span>
+                                <div style={{ height: '2px' }}></div>
+                                <span style={{ fontWeight: 500, color: '#334155', fontSize: '13px' }}>{lead.leadName || '--'}</span>
+                              </div>
                             </div>
-                              <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                                <span style={{ fontWeight: 600, color: '#0f172a', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                  {lead.companyName || '--'}
-                                  {lead.isActive === false && (
-                                    <span style={{ fontSize: '10px', background: '#fee2e2', color: '#ef4444', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>DELETED</span>
-                                  )}
-                                </span>
-                                <span style={{ fontSize: '12.5px', color: '#64748b' }}>{lead.industry || '--'}</span>
-                              <div style={{ height: '2px' }}></div>
-                              <span style={{ fontWeight: 500, color: '#334155', fontSize: '13px' }}>{lead.leadName || '--'}</span>
-                              {lead.jobTitle ? <span style={{ fontSize: '12px', color: '#94a3b8' }}>{lead.jobTitle}</span> : null}
+                          </Td>
+                          <Td>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'flex-start' }}>
+                              <span style={{ fontSize: '13px', color: '#334155', fontWeight: 500 }}>
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px', verticalAlign: '-2px' }}><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                                {emailAddr}
+                              </span>
+                              <span style={{ fontSize: '13px', color: '#334155', fontWeight: 500 }}>
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px', verticalAlign: '-2px' }}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                                {phoneNum}
+                              </span>
                             </div>
-                          </div>
-                        </Td>
-                        <Td>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-start' }}>
-                            <LeadIdBadge>{lead.leadId || lead.id}</LeadIdBadge>
-                            <span style={{ fontSize: '13px', color: '#334155', fontWeight: 500 }}>
-                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px', verticalAlign: '-2px' }}><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                              {leadOwnerName}
-                            </span>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#64748b', fontSize: '12px', fontWeight: 500 }}>
-                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                              <span>{formatDateDisplay(lead.dateCaptured || lead.createdAt)}</span>
+                          </Td>
+                          <Td>
+                            <span style={{ fontWeight: 700, color: '#16a34a', fontSize: '14px' }}>{dealAmount}</span>
+                          </Td>
+                          <Td>
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px' }}>
+                              <span style={{ fontWeight: 500, color: '#0f172a' }}>{lead.pipelineStage || lead.stage || lead.status || '--'}</span>
+                              <span style={{ fontSize: '11px', padding: '2px 6px', borderRadius: '12px', backgroundColor: '#f1f5f9', color: '#64748b', fontWeight: 600 }}>
+                                {lead.probability || 0}% Probability
+                              </span>
                             </div>
-                          </div>
-                        </Td>
-                        <Td>
-                          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px' }}>
-                            <span style={{ fontWeight: 500, color: '#0f172a' }}>{lead.pipelineStage || lead.stage || lead.status || '--'}</span>
-                            <span style={{ fontSize: '11px', padding: '2px 6px', borderRadius: '12px', backgroundColor: '#f1f5f9', color: '#64748b', fontWeight: 600 }}>
-                              {lead.probability || 0}%
-                            </span>
-                          </div>
-                        </Td>
-
+                          </Td>
                           <Td>
                             {lead.expectedCloseDate ? (
                               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#64748b', fontSize: '13px', fontWeight: 500, whiteSpace: 'nowrap' }}>
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                                 <span>{formatDateDisplay(lead.expectedCloseDate)}</span>
                               </div>
-                            ) : '-'}
+                            ) : '--'}
                           </Td>
                           <Td>
-                            {lead.lastContactDate ? (
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#64748b', fontSize: '13px', fontWeight: 500, whiteSpace: 'nowrap' }}>
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                                <span>{formatDateDisplay(lead.lastContactDate)}</span>
-                              </div>
-                            ) : '-'}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#334155', fontSize: '13px', fontWeight: 500 }}>
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                              {dealOwnerName}
+                            </div>
                           </Td>
-                        
-                        <Td style={{ position: 'relative' }}>
-                          <FollowupCellWrapper>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#64748b', fontSize: '13px', fontWeight: 500, whiteSpace: 'nowrap' }}>
-                              {lead.nextFollowupDate ? (
-                                <>
-                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                                  <span>{formatDateDisplay(lead.nextFollowupDate)}</span>
-                                </>
-                              ) : '-'}
-                            </div>
-                            <FollowupTriggerButton 
-                              type="button"
-                              data-followup-trigger="true"
-                              onClick={(e) => handleOpenInlineFollowup(lead, e)}
-                              title="Click to view timeline and edit follow-up"
-                              style={{ marginLeft: '12px' }}
-                            >
-                              <span style={{ fontSize: '12px' }}>⏱️</span>
-                            </FollowupTriggerButton>
-                          </FollowupCellWrapper>
-                        </Td>
-
-                        <Td alignRight>
-                          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                              <SecondaryButton style={{ padding: '6px', color: '#0f172a', borderColor: '#e2e8f0', background: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => openViewModal(lead)} title="View More">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                              </SecondaryButton>
-                              <SecondaryButton style={{ padding: '6px', color: '#2563eb', borderColor: '#bfdbfe', background: '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => openEditModal(lead)} title="Edit Lead">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                              </SecondaryButton>
-                              {lead.isActive === false ? (
-                                <SecondaryButton style={{ padding: '6px', color: '#16a34a', borderColor: '#bbf7d0', background: '#f0fdf4', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => handleRestoreLead(lead.id || lead.leadId)} title="Restore Lead">
-                                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+                          <Td alignRight>
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <SecondaryButton style={{ padding: '6px', color: '#0f172a', borderColor: '#e2e8f0', background: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => openViewModal(lead)} title="View More">
+                                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                                 </SecondaryButton>
-                              ) : (
-                                <SecondaryButton style={{ padding: '6px', color: '#ef4444', borderColor: '#fecaca', background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => handleDeleteLead(lead.id || lead.leadId)} title="Delete Lead">
-                                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                <SecondaryButton style={{ padding: '6px', color: '#2563eb', borderColor: '#bfdbfe', background: '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => openEditModal(lead)} title="Edit Deal">
+                                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                                 </SecondaryButton>
-                              )}
+                                {lead.isActive === false ? (
+                                  <SecondaryButton style={{ padding: '6px', color: '#16a34a', borderColor: '#bbf7d0', background: '#f0fdf4', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => handleRestoreLead(lead.id || lead.leadId)} title="Restore Deal">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+                                  </SecondaryButton>
+                                ) : (
+                                  <SecondaryButton style={{ padding: '6px', color: '#ef4444', borderColor: '#fecaca', background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => handleDeleteLead(lead.id || lead.leadId)} title="Delete Deal">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                  </SecondaryButton>
+                                )}
+                              </div>
                             </div>
-                          </div>
-                        </Td>
-                      </Tr>
-                    );
+                          </Td>
+                        </Tr>
+                      );
                   })}
                   {filteredLeads.length === 0 && (
                     <tr>
@@ -4030,9 +4006,9 @@ export const DealsPage = () => {
               Showing 1-{filteredLeads.length} of {leads.length} leads
             </FooterCount>
             <PaginationNav>
-              <PageBtn disabled title="Previous page">‹</PageBtn>
+              <PageBtn disabled title="Previous page">â€¹</PageBtn>
               <PageBtn active title="Page 1">1</PageBtn>
-              <PageBtn disabled title="Next page">›</PageBtn>
+              <PageBtn disabled title="Next page">â€º</PageBtn>
             </PaginationNav>
             <PageSizeWrapper>
               <span>Rows per page:</span>
@@ -4062,7 +4038,7 @@ export const DealsPage = () => {
               >
                 <PopoverHeader>
                   <PopoverTitle>
-                    <span>📅</span>
+                    <span>ðŸ“…</span>
                     <span>Last Follow-up & Activity Timeline</span>
                   </PopoverTitle>
                   <PopoverCloseBtn
@@ -4070,7 +4046,7 @@ export const DealsPage = () => {
                     onClick={handleCloseInlineFollowup}
                     title="Close"
                   >
-                    ✕
+                    âœ•
                   </PopoverCloseBtn>
                 </PopoverHeader>
 
@@ -4079,7 +4055,7 @@ export const DealsPage = () => {
                     {activeLead.leadName}
                     {activeLead.jobTitle && (
                       <span style={{ fontWeight: 600, color: '#2563eb', marginLeft: '6px', fontSize: '12px' }}>
-                        · {activeLead.jobTitle}
+                        Â· {activeLead.jobTitle}
                       </span>
                     )}
                     {activeLead.companyName && (
@@ -4099,7 +4075,7 @@ export const DealsPage = () => {
                     active={popoverActiveTab === 'timeline'}
                     onClick={() => setPopoverActiveTab('timeline')}
                   >
-                    <span>⏱️</span>
+                    <span>â±ï¸</span>
                     <span>Follow-up Timeline</span>
                     <PopoverTabBadge active={popoverActiveTab === 'timeline'}>
                       {timeline.length}
@@ -4110,7 +4086,7 @@ export const DealsPage = () => {
                     active={popoverActiveTab === 'followup'}
                     onClick={() => setPopoverActiveTab('followup')}
                   >
-                    <span>📝</span>
+                    <span>ðŸ“</span>
                     <span>Last Follow-up</span>
                   </PopoverTabItem>
                 </PopoverTabBar>
@@ -4220,7 +4196,7 @@ export const DealsPage = () => {
                 {popoverActiveTab === 'timeline' && (
                   <VertexTimelineContainer style={{ maxHeight: '420px', marginTop: '4px' }}>
                     <VertexSpineCap>
-                      <VertexCapBadge>● Last Follow-up</VertexCapBadge>
+                      <VertexCapBadge>â— Last Follow-up</VertexCapBadge>
                     </VertexSpineCap>
                     <div style={{ position: 'relative', width: '100%' }}>
                       <VertexCentralAxis />
@@ -4241,7 +4217,7 @@ export const DealsPage = () => {
                                     </VertexCardHeader>
                                     {item.callReason && (
                                       <VertexCallReasonTag title={`Call Reason: ${item.callReason}`}>
-                                        🎯 {item.callReason}
+                                        ðŸŽ¯ {item.callReason}
                                       </VertexCallReasonTag>
                                     )}
                                     {item.notes && (
@@ -4249,7 +4225,7 @@ export const DealsPage = () => {
                                     )}
                                     <VertexMetaRow>
                                       {item.userName || 'Customer Care Rep'}
-                                      {item.createdAt && ` · ${formatRelativeTime(item.createdAt)}`}
+                                      {item.createdAt && ` Â· ${formatRelativeTime(item.createdAt)}`}
                                     </VertexMetaRow>
                                   </VertexMilestoneCard>
                                   <VertexMarkerSquare statusType={item.status} title={`Status: ${item.status}`} />
@@ -4278,7 +4254,7 @@ export const DealsPage = () => {
                                     </VertexCardHeader>
                                     {item.callReason && (
                                       <VertexCallReasonTag title={`Call Reason: ${item.callReason}`}>
-                                        🎯 {item.callReason}
+                                        ðŸŽ¯ {item.callReason}
                                       </VertexCallReasonTag>
                                     )}
                                     {item.notes && (
@@ -4286,7 +4262,7 @@ export const DealsPage = () => {
                                     )}
                                     <VertexMetaRow>
                                       {item.userName || 'Customer Care Rep'}
-                                      {item.createdAt && ` · ${formatRelativeTime(item.createdAt)}`}
+                                      {item.createdAt && ` Â· ${formatRelativeTime(item.createdAt)}`}
                                     </VertexMetaRow>
                                   </VertexMilestoneCard>
                                 </>
@@ -4303,7 +4279,7 @@ export const DealsPage = () => {
                     </div>
                     {timeline.length > 0 && (
                       <VertexSpineCap style={{ marginTop: '12px', marginBottom: '0' }}>
-                        <VertexCapBadge>● Initial Project Inquiry</VertexCapBadge>
+                        <VertexCapBadge>â— Initial Project Inquiry</VertexCapBadge>
                       </VertexSpineCap>
                     )}
                   </VertexTimelineContainer>
@@ -4331,7 +4307,7 @@ export const DealsPage = () => {
                   type="button"
                   onClick={() => !isSaving && setIsModalOpen(false)}
                 >
-                  ✕
+                  âœ•
                 </ModalCloseButton>
               </ModalHeaderBanner>
 
@@ -4340,7 +4316,7 @@ export const DealsPage = () => {
 
                 {isViewOnlyModal ? (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', paddingBottom: '20px' }}>
-                    <FormSectionTitle><span>🧑</span><span>1. Lead & Contact Information</span></FormSectionTitle>
+                    <FormSectionTitle><span>ðŸ§‘</span><span>1. Lead & Contact Information</span></FormSectionTitle>
                     <FormGrid>
                       <ViewOnlyDetailItem label="Lead Name" value={formData.leadName} />
                       <ViewOnlyDetailItem label="Company Name" value={formData.companyName} />
@@ -4350,7 +4326,7 @@ export const DealsPage = () => {
                       <ViewOnlyDetailItem label="Date Captured" value={formData.dateCaptured} />
                     </FormGrid>
 
-                    <FormSectionTitle><span>🏢</span><span>2. Business & Profiling</span></FormSectionTitle>
+                    <FormSectionTitle><span>ðŸ¢</span><span>2. Business & Profiling</span></FormSectionTitle>
                     <FormGrid>
                       <ViewOnlyDetailItem label="Lead Source" value={formData.leadSource} />
                       <ViewOnlyDetailItem label="Service Interest" value={formData.serviceInterest} />
@@ -4358,7 +4334,7 @@ export const DealsPage = () => {
                       <ViewOnlyDetailItem label="Company Size" value={formData.companySize} />
                     </FormGrid>
 
-                    <FormSectionTitle><span>📈</span><span>3. Deal & Pipeline Dynamics</span></FormSectionTitle>
+                    <FormSectionTitle><span>ðŸ“ˆ</span><span>3. Deal & Pipeline Dynamics</span></FormSectionTitle>
                     <FormGrid>
                       <ViewOnlyDetailItem label="Pipeline Stage" value={formData.pipelineStage} />
                       <ViewOnlyDetailItem label="Probability in %" value={formData.probability ? `${formData.probability}%` : ''} />
@@ -4368,7 +4344,7 @@ export const DealsPage = () => {
                       {formData.pipelineStage === 'Lost' && <ViewOnlyDetailItem label="Lost Reason" value={formData.lostReason} />}
                     </FormGrid>
 
-                    <FormSectionTitle><span>📅</span><span>4. Follow-up & Activity Tracking</span></FormSectionTitle>
+                    <FormSectionTitle><span>ðŸ“…</span><span>4. Follow-up & Activity Tracking</span></FormSectionTitle>
                     <FormGrid>
                       <ViewOnlyDetailItem label="Last Contact Date" value={formData.lastContactDate} />
                       <ViewOnlyDetailItem label="Last Contact Status" value={formData.status} />
@@ -4391,7 +4367,7 @@ export const DealsPage = () => {
                     <FormGrid>
                       {/* SECTION 1: Lead & Contact Info */}
                       <FormSectionTitle>
-                        <span>🧑</span>
+                        <span>ðŸ§‘</span>
                         <span>1. Lead & Contact Information</span>
                       </FormSectionTitle>
 
@@ -4523,7 +4499,7 @@ export const DealsPage = () => {
 
                     {/* SECTION 2: Business & Profiling */}
                     <FormSectionTitle>
-                      <span>🏢</span>
+                      <span>ðŸ¢</span>
                       <span>2. Business & Profiling</span>
                     </FormSectionTitle>
 
@@ -4572,14 +4548,14 @@ export const DealsPage = () => {
                                       handleToggleService(svc);
                                     }}
                                   >
-                                    ✕
+                                    âœ•
                                   </ChipRemoveBtn>
                                 </MultiSelectChip>
                               ))
                             )}
                           </MultiSelectChipsWrapper>
                           <span style={{ fontSize: '11px', color: '#6b7280', flexShrink: 0 }}>
-                            {isServiceDropdownOpen ? '▲' : '▼'}
+                            {isServiceDropdownOpen ? 'â–²' : 'â–¼'}
                           </span>
                         </MultiSelectTrigger>
 
@@ -4646,7 +4622,7 @@ export const DealsPage = () => {
 
                     {/* SECTION 3: Deal & Pipeline Dynamics */}
                     <FormSectionTitle>
-                      <span>📊</span>
+                      <span>ðŸ“Š</span>
                       <span>3. Deal & Pipeline Dynamics</span>
                     </FormSectionTitle>
 
@@ -4708,8 +4684,8 @@ export const DealsPage = () => {
                           onChange={(e) => handleDealCurrencyChange(e.target.value as 'INR' | 'AED')}
                           style={{ fontWeight: 600 }}
                         >
-                          <option value="INR">🇮🇳 INR (₹)</option>
-                          <option value="AED">🇦🇪 AED (AED)</option>
+                          <option value="INR">ðŸ‡®ðŸ‡³ INR (â‚¹)</option>
+                          <option value="AED">ðŸ‡¦ðŸ‡ª AED (AED)</option>
                         </FormSelect>
                         <FormSelect
                           value={dealSelectedAmount}
@@ -4744,7 +4720,7 @@ export const DealsPage = () => {
                             color: '#065f46',
                           }}
                         >
-                          <span style={{ fontSize: '15px' }}>💵</span>
+                          <span style={{ fontSize: '15px' }}>ðŸ’µ</span>
                           <span style={{ fontWeight: 600 }}>Est US Dollars:</span>
                           <span
                             style={{
@@ -4760,7 +4736,7 @@ export const DealsPage = () => {
                           </span>
                           {dealSelectedAmount && (
                             <span style={{ fontSize: '11px', color: '#6b7280' }}>
-                              (from {dealCurrency === 'INR' ? '₹' : 'AED '}
+                              (from {dealCurrency === 'INR' ? 'â‚¹' : 'AED '}
                               {Number(dealSelectedAmount).toLocaleString()})
                             </span>
                           )}
@@ -4781,7 +4757,7 @@ export const DealsPage = () => {
 
                     {/* SECTION 4: Follow-up, Status & Notes */}
                     <FormSectionTitle>
-                      <span>📅</span>
+                      <span>ðŸ“…</span>
                       <span>4. Follow-up, Status & Notes</span>
                     </FormSectionTitle>
 
@@ -4881,7 +4857,7 @@ export const DealsPage = () => {
                   <ModalHeaderSubtitle>Create a new Opportunity</ModalHeaderSubtitle>
                 </ModalHeaderTitleGroup>
                 <ModalCloseButton type="button" onClick={() => setLeadToConvert(null)}>
-                  ✕
+                  âœ•
                 </ModalCloseButton>
               </ModalHeaderBanner>
               <ModalBody>
@@ -4950,3 +4926,5 @@ export const DealsPage = () => {
 };
 
 export default DealsPage;
+
+

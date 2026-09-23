@@ -3151,6 +3151,7 @@ export const LeadsPage = () => {
       status: inlineStatus || lead?.status || 'New',
       callReason: inlineCallReason || 'Initial Qualification & Discovery',
       notes: formattedNotes || null,
+      newTimelineItem: newTimelineItem,
     };
 
     // Optimistically update local state immediately
@@ -3613,6 +3614,7 @@ export const LeadsPage = () => {
       followupStatus: editingLeadId ? undefined : (formData.status || 'New'),
       callReason: initialReason,
       yetToCallNotes: initialNotes,
+      newTimelineItem: editingLeadId ? undefined : initialTimelineItem,
     };
 
     try {
