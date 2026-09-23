@@ -1840,15 +1840,7 @@ const getLeadDefaultTimeline = (lead: any): FollowupTimelineItem[] => {
     return match.followupHistory;
   }
 
-      id: `FL-${lead?.id || 'lead'}-4`,
-      date: '2026-09-02',
-      status: 'Yet to Call',
-      callReason: 'Initial Qualification & Discovery',
-      notes: `Initial lead captured via ${source}. Customer requested catalog and volume quote.`,
-      createdAt: '2026-09-02T10:00:00.000Z',
-      userName: 'Ladera Technology',
-    },
-  ];
+  return [];
 };
 
 const VertexTimelineContainer = styled.div`
