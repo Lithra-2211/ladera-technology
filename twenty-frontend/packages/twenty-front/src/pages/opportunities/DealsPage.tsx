@@ -2918,7 +2918,7 @@ const ViewOnlyDetailItem = ({ label, value, fullWidth }: { label: string, value:
 );
 
 
-export const LeadsPage = () => {
+export const DealsPage = () => {
   const setIsNavigationDrawerExpanded = useSetAtomState(isNavigationDrawerExpandedState);
   useEffect(() => {
     setIsNavigationDrawerExpanded(true);
@@ -3690,6 +3690,8 @@ export const LeadsPage = () => {
 
   const filteredLeads = useMemo(() => {
     return leads.filter(lead => {
+      if (!lead.isQualifiedLead) return false;
+      
       const stage = lead.status || lead.stage || lead.pipelineStage;
       const matchesStage = selectedStage === 'All stages' || stage === selectedStage;
       const leadSrc = lead.leadSource || lead.source;
@@ -3887,13 +3889,13 @@ export const LeadsPage = () => {
             <Table>
               <thead>
                   <tr>
-                      <Th>Company Info</Th>
-                      <Th>Lead Details</Th>
-                        <Th>Pipeline Stage</Th>
-                      <Th>Exp Close Date</Th>
-                      <Th>Last Contact Date</Th>
-                      <Th>Next Follow-up Date</Th>
-                      <Th alignRight>Action</Th>
+                    <Th>Deal / Company</Th>
+                    <Th>Contact Details</Th>
+                    <Th>Deal Amount (INR)</Th>
+                    <Th>Pipeline Stage</Th>
+                    <Th>Exp Close Date</Th>
+                    <Th>Owner</Th>
+                    <Th alignRight>Action</Th>
                   </tr>
                 </thead>
                 <tbody>
@@ -4007,9 +4009,6 @@ export const LeadsPage = () => {
                                 </SecondaryButton>
                               )}
                             </div>
-                            <PrimaryButton style={{ padding: '6px 12px', fontSize: '12px', width: '100%', justifyContent: 'center' }} onClick={() => handleOpenConvertModal(lead)}>
-                              Convert to Deal
-                            </PrimaryButton>
                           </div>
                         </Td>
                       </Tr>
@@ -4950,4 +4949,4 @@ export const LeadsPage = () => {
   );
 };
 
-export default LeadsPage;
+export default DealsPage;

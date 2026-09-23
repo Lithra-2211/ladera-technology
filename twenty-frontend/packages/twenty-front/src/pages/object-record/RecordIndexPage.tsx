@@ -10,6 +10,7 @@ import { isUndefined } from '@sniptt/guards';
 import { ReportsPage } from '~/pages/dashboards/DashboardsPage';
 import { LeadsPage } from '~/pages/leads/LeadsPage';
 import { CustomersPage } from '~/pages/customers/CustomersPage';
+import { DealsPage } from '~/pages/opportunities/DealsPage';
 export const RecordIndexPage = () => {
   const contextStoreCurrentObjectMetadataItemId = useAtomComponentStateValue(
     contextStoreCurrentObjectMetadataItemIdComponentState,
@@ -60,6 +61,14 @@ export const RecordIndexPage = () => {
     return (
       <PageContainer>
         <LeadsPage />
+      </PageContainer>
+    );
+  }
+
+  if (objectMetadataItem.namePlural === 'opportunities') {
+    return (
+      <PageContainer>
+        <DealsPage />
       </PageContainer>
     );
   }
