@@ -2973,6 +2973,12 @@ export const LeadsPage = () => {
 
   const navigate = useNavigate();
   const [convertingId, setConvertingId] = useState<string | null>(null);
+  const [leadToConvert, setLeadToConvert] = useState<LeadItem | null>(null);
+  
+  const [dealFormName, setDealFormName] = useState('');
+  const [dealFormAmount, setDealFormAmount] = useState('');
+  const [dealFormStage, setDealFormStage] = useState('PROPOSAL');
+  const [dealFormCloseDate, setDealFormCloseDate] = useState('');
   const { createOneRecord: createOpportunity } = useCreateOneRecord({
     objectNameSingular: 'opportunity',
   });
@@ -3021,24 +3027,43 @@ export const LeadsPage = () => {
     }
   };
 
+  const handleOpenConvertModal = (lead: LeadItem) => {
+    const defaultTitle = lead.companyName
+      ? `${lead.companyName} · ${lead.requirement || 'Modular Furniture Setup'}`
+      : `${lead.leadName} · ${lead.requirement || 'Furniture Order'}`;
+      
+    setDealFormName(defaultTitle);
+    
+    // Convert the formatted "$100,000" back to just numbers if possible
+    let parsedAmount = '';
+    if (lead.estValue) {
+      const numericOnly = lead.estValue.replace(/[^0-9.]/g, '');
+      if (numericOnly) parsedAmount = numericOnly;
+    }
+    setDealFormAmount(parsedAmount);
+    
+    setDealFormStage('PROPOSAL');
+    setDealFormCloseDate(new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0]);
+    
+    setLeadToConvert(lead);
+  };
+
   const handleConvertToDeal = async (lead: LeadItem) => {
     setConvertingId(lead.id);
     try {
-      const parsed = parseEstValueToAmount(lead.estValue);
-      const dealTitle = lead.companyName
-        ? `${lead.companyName} · ${lead.requirement || 'Modular Furniture Setup'}`
-        : `${lead.leadName} · ${lead.requirement || 'Furniture Order'}`;
+      const amountMicros = Math.round(Number(dealFormAmount) * 1000000) || 0;
+      const dealTitle = dealFormName || (lead.companyName ? `${lead.companyName} Deal` : `${lead.leadName} Deal`);
 
       try {
         await createOpportunity({
           id: v4(),
           name: dealTitle,
           amount: {
-            amountMicros: parsed.micros,
+            amountMicros: amountMicros,
             currencyCode: 'INR',
           },
-          stage: 'PROPOSAL',
-          closeDate: new Date(Date.now() + 30 * 86400000).toISOString(),
+          stage: dealFormStage,
+          closeDate: new Date(dealFormCloseDate).toISOString(),
         });
       } catch (gqlErr) {
         console.warn('Create opportunity notice:', gqlErr);
@@ -3705,7 +3730,12 @@ export const LeadsPage = () => {
   }, [leads, selectedStage, selectedSource, selectedCompany, selectedOwner, searchQuery]);
 
   // Dynamic KPI counts - exact lead counts matching active leads list
-  const totalOpenCount = leads.length;
+  const totalOpenCount = leads.filter(l => 
+    l.pipelineStage !== 'Won' && 
+    l.pipelineStage !== 'Lost' && 
+    l.status !== 'Won' && 
+    l.status !== 'Lost'
+  ).length;
 
   const sourceStats = useMemo(() => {
     const total = leads.length;
@@ -3960,7 +3990,7 @@ export const LeadsPage = () => {
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                               </SecondaryButton>
                             </div>
-                            <PrimaryButton style={{ padding: '6px 12px', fontSize: '12px', width: '100%', justifyContent: 'center' }} onClick={() => showToast('Converted to Deal!')}>
+                            <PrimaryButton style={{ padding: '6px 12px', fontSize: '12px', width: '100%', justifyContent: 'center' }} onClick={() => handleOpenConvertModal(lead)}>
                               Convert to Deal
                             </PrimaryButton>
                           </div>
@@ -4280,9 +4310,6 @@ export const LeadsPage = () => {
                         ? `Edit Lead (${editingLeadId})`
                         : 'Create New Lead'}
                   </ModalHeaderTitle>
-                  <ModalHeaderSubtitle>
-                    Ladera Technology
-                  </ModalHeaderSubtitle>
                 </ModalHeaderTitleGroup>
                 <ModalCloseButton
                   type="button"
@@ -4323,14 +4350,13 @@ export const LeadsPage = () => {
                       <ViewOnlyDetailItem label="Lead Owner" value={formData.leadOwner} />
                       <ViewOnlyDetailItem label="Estimated Deal Value" value={formData.estimatedDealValue} />
                       <ViewOnlyDetailItem label="Expected Close Date" value={formData.expectedCloseDate} />
-                      <ViewOnlyDetailItem label="Days in Pipeline" value={formData.daysInPipeline} />
-                      <ViewOnlyDetailItem label="Status" value={formData.status} />
                       {formData.pipelineStage === 'Lost' && <ViewOnlyDetailItem label="Lost Reason" value={formData.lostReason} />}
                     </FormGrid>
 
                     <FormSectionTitle><span>📅</span><span>4. Follow-up & Activity Tracking</span></FormSectionTitle>
                     <FormGrid>
                       <ViewOnlyDetailItem label="Last Contact Date" value={formData.lastContactDate} />
+                      <ViewOnlyDetailItem label="Status" value={formData.status} />
                       <ViewOnlyDetailItem label="Next Follow-up Date" value={formData.nextFollowupDate} />
                       <ViewOnlyDetailItem label="Follow up Notes" value={formData.followupNotes} fullWidth />
                     </FormGrid>
@@ -4365,7 +4391,8 @@ export const LeadsPage = () => {
                           value={formData.leadId}
                           onChange={handleInputChange}
                           placeholder="e.g. LD-0001"
-                          style={{ fontFamily: 'monospace', fontWeight: 700 }}
+                          style={{ fontFamily: 'monospace', fontWeight: 700, backgroundColor: '#f1f5f9', color: '#64748b' }}
+                          disabled
                         />
                       </FormGroup>
                     )}
@@ -4625,45 +4652,37 @@ export const LeadsPage = () => {
                       <span>3. Deal & Pipeline Dynamics</span>
                     </FormSectionTitle>
 
-                    {/* 11. Pipeline Stage */}
+                    {/* 11 & 12. Pipeline Stage & Probability */}
                     <FormGroup>
                       <FormLabel>
-                        Pipeline Stage <RequiredStar>*</RequiredStar>
+                        Pipeline Stage & Probability <RequiredStar>*</RequiredStar>
                       </FormLabel>
-                      <FormSelect
-                        name="pipelineStage"
-                        value={formData.pipelineStage}
-                        onChange={handleInputChange}
-                        onBlur={() => handleBlur('pipelineStage')}
-                        hasError={!!(touched.pipelineStage && validationErrors.pipelineStage)}
-                      >
-                        <option value="">-- Select Pipeline Stage --</option>
-                        {formData.pipelineStage && !PIPELINE_STAGE_OPTIONS.includes(formData.pipelineStage) && (
-                          <option value={formData.pipelineStage}>{formData.pipelineStage}</option>
-                        )}
-                        {PIPELINE_STAGE_OPTIONS.map(stg => (
-                          <option key={stg} value={stg}>{stg}</option>
-                        ))}
-                      </FormSelect>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 100px', gap: '8px' }}>
+                        <FormSelect
+                          name="pipelineStage"
+                          value={formData.pipelineStage}
+                          onChange={handleInputChange}
+                          onBlur={() => handleBlur('pipelineStage')}
+                          hasError={!!(touched.pipelineStage && validationErrors.pipelineStage)}
+                        >
+                          <option value="">-- Select Pipeline Stage --</option>
+                          {formData.pipelineStage && !PIPELINE_STAGE_OPTIONS.includes(formData.pipelineStage) && (
+                            <option value={formData.pipelineStage}>{formData.pipelineStage}</option>
+                          )}
+                          {PIPELINE_STAGE_OPTIONS.map(stg => (
+                            <option key={stg} value={stg}>{stg}</option>
+                          ))}
+                        </FormSelect>
+                        <FormInput
+                          name="probability"
+                          value={`${formData.probability}%`}
+                          disabled
+                          style={{ textAlign: 'center', backgroundColor: '#f1f5f9', fontWeight: 600, color: '#475569' }}
+                        />
+                      </div>
                       {touched.pipelineStage && validationErrors.pipelineStage && (
                         <FieldError>{validationErrors.pipelineStage}</FieldError>
                       )}
-                    </FormGroup>
-
-                    {/* 12. Probability in % (Near Pipeline Stage) */}
-                    <FormGroup>
-                      <FormLabel>
-                        Probability in %
-                      </FormLabel>
-                      <FormSelect
-                        name="probability"
-                        value={formData.probability}
-                        onChange={handleInputChange}
-                      >
-                        {PROBABILITY_OPTIONS.map(prob => (
-                          <option key={prob} value={prob}>{prob}%</option>
-                        ))}
-                      </FormSelect>
                     </FormGroup>
 
                     {/* 13. Lead Owner */}
@@ -4690,9 +4709,6 @@ export const LeadsPage = () => {
                     <FormGroup>
                       <FormLabel>
                         Estimated Deal Value
-                        <span style={{ marginLeft: '6px', fontSize: '11px', color: '#10b981', fontWeight: 600 }}>
-                          (Select INR or AED · Auto-converts to USD)
-                        </span>
                       </FormLabel>
                       <div style={{ display: 'grid', gridTemplateColumns: '140px 1fr', gap: '8px' }}>
                         <FormSelect
@@ -4771,21 +4787,6 @@ export const LeadsPage = () => {
                       />
                     </FormGroup>
 
-                    {/* 20. Days in Pipeline */}
-                    <FormGroup>
-                      <FormLabel>
-                        Days in Pipeline
-                      </FormLabel>
-                      <FormInput
-                        name="daysInPipeline"
-                        type="number"
-                        min="0"
-                        value={formData.daysInPipeline}
-                        onChange={handleInputChange}
-                        placeholder="e.g. 15"
-                      />
-                    </FormGroup>
-
                     {/* SECTION 4: Follow-up, Status & Notes */}
                     <FormSectionTitle>
                       <span>📅</span>
@@ -4799,17 +4800,6 @@ export const LeadsPage = () => {
                         name="lastContactDate"
                         type="date"
                         value={formData.lastContactDate}
-                        onChange={handleInputChange}
-                      />
-                    </FormGroup>
-
-                    {/* 17. Next Follow-up Date */}
-                    <FormGroup>
-                      <FormLabel>Next Follow-up Date</FormLabel>
-                      <FormInput
-                        name="nextFollowupDate"
-                        type="date"
-                        value={formData.nextFollowupDate}
                         onChange={handleInputChange}
                       />
                     </FormGroup>
@@ -4829,6 +4819,17 @@ export const LeadsPage = () => {
                           <option key={stat} value={stat}>{stat}</option>
                         ))}
                       </FormSelect>
+                    </FormGroup>
+
+                    {/* 17. Next Follow-up Date */}
+                    <FormGroup>
+                      <FormLabel>Next Follow-up Date</FormLabel>
+                      <FormInput
+                        name="nextFollowupDate"
+                        type="date"
+                        value={formData.nextFollowupDate}
+                        onChange={handleInputChange}
+                      />
                     </FormGroup>
 
                     {/* 19. Lost Reason */}
@@ -4874,6 +4875,77 @@ export const LeadsPage = () => {
                   </ModalActions>
                 </form>
                 )}
+              </ModalBody>
+            </ModalCard>
+          </ModalOverlay>
+        )}
+        {/* Convert to Deal Confirmation Modal */}
+        {leadToConvert && (
+          <ModalOverlay onClick={() => setLeadToConvert(null)}>
+            <ModalCard onClick={e => e.stopPropagation()} style={{ maxWidth: '500px' }}>
+              <ModalHeaderBanner>
+                <ModalHeaderTitleGroup>
+                  <ModalHeaderTitle>Convert to Deal</ModalHeaderTitle>
+                  <ModalHeaderSubtitle>Create a new Opportunity</ModalHeaderSubtitle>
+                </ModalHeaderTitleGroup>
+                <ModalCloseButton type="button" onClick={() => setLeadToConvert(null)}>
+                  ✕
+                </ModalCloseButton>
+              </ModalHeaderBanner>
+              <ModalBody>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '24px' }}>
+                  <FormGroup fullWidth>
+                    <FormLabel>Deal Name <RequiredStar>*</RequiredStar></FormLabel>
+                    <FormInput 
+                      value={dealFormName} 
+                      onChange={e => setDealFormName(e.target.value)} 
+                    />
+                  </FormGroup>
+                  <FormGrid>
+                    <FormGroup>
+                      <FormLabel>Amount (INR)</FormLabel>
+                      <FormInput 
+                        type="number"
+                        value={dealFormAmount} 
+                        onChange={e => setDealFormAmount(e.target.value)} 
+                      />
+                    </FormGroup>
+                    <FormGroup>
+                      <FormLabel>Expected Close Date</FormLabel>
+                      <FormInput 
+                        type="date"
+                        value={dealFormCloseDate} 
+                        onChange={e => setDealFormCloseDate(e.target.value)} 
+                      />
+                    </FormGroup>
+                    <FormGroup fullWidth>
+                      <FormLabel>Pipeline Stage</FormLabel>
+                      <FormSelect 
+                        value={dealFormStage} 
+                        onChange={e => setDealFormStage(e.target.value)}
+                      >
+                        <option value="PROPOSAL">Proposal</option>
+                        <option value="NEGOTIATION">Negotiation</option>
+                        <option value="NEW">New</option>
+                      </FormSelect>
+                    </FormGroup>
+                  </FormGrid>
+                </div>
+                <ModalActions>
+                  <SecondaryButton type="button" onClick={() => setLeadToConvert(null)}>
+                    Cancel
+                  </SecondaryButton>
+                  <PrimaryButton
+                    type="button"
+                    onClick={() => {
+                      handleConvertToDeal(leadToConvert);
+                      setLeadToConvert(null);
+                    }}
+                    disabled={convertingId === leadToConvert.id}
+                  >
+                    {convertingId === leadToConvert.id ? 'Converting...' : 'Confirm & Convert'}
+                  </PrimaryButton>
+                </ModalActions>
               </ModalBody>
             </ModalCard>
           </ModalOverlay>
