@@ -4279,7 +4279,6 @@ export const LeadsPage = () => {
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', paddingBottom: '20px' }}>
                     <FormSectionTitle><span>🧑</span><span>1. Lead & Contact Information</span></FormSectionTitle>
                     <FormGrid>
-                      <ViewOnlyDetailItem label="Lead ID" value={formData.leadId} />
                       <ViewOnlyDetailItem label="Lead Name" value={formData.leadName} />
                       <ViewOnlyDetailItem label="Company Name" value={formData.companyName} />
                       <ViewOnlyDetailItem label="Job Title" value={formData.jobTitle} />
@@ -4332,23 +4331,6 @@ export const LeadsPage = () => {
                         <span>🧑</span>
                         <span>1. Lead & Contact Information</span>
                       </FormSectionTitle>
-
-                    {/* Lead ID (Only when editing an existing lead, full-width so it doesn't displace grid) */}
-                    {editingLeadId && (
-                      <FormGroup fullWidth>
-                        <FormLabel>
-                          Lead ID <RequiredStar>*</RequiredStar>
-                        </FormLabel>
-                        <FormInput
-                          name="leadId"
-                          value={formData.leadId}
-                          onChange={handleInputChange}
-                          placeholder="e.g. LD-0001"
-                          style={{ fontFamily: 'monospace', fontWeight: 700, backgroundColor: '#f1f5f9', color: '#64748b' }}
-                          disabled
-                        />
-                      </FormGroup>
-                    )}
 
                     {/* 1. Lead Name */}
                     <FormGroup>
