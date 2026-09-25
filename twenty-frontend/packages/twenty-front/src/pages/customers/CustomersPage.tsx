@@ -16,7 +16,16 @@ const PageWrapper = styled.div`
   width: 100%;
   box-sizing: border-box;
   overflow: hidden;
-  background-color: #fafafa;
+  background-color: #f8fafc;
+  background-image: 
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23dbeafe' fill-opacity='1' d='M0,224L48,229.3C96,235,192,245,288,240C384,235,480,213,576,213.3C672,213,768,235,864,213.3C960,192,1056,128,1152,112C1248,96,1344,128,1392,144L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23bfdbfe' fill-opacity='1' d='M0,288L48,272C96,256,192,224,288,197.3C384,171,480,149,576,165.3C672,181,768,235,864,250.7C960,267,1056,245,1152,250.7C1248,256,1344,288,1392,304L1440,320L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%2360a5fa' fill-opacity='1' d='M0,160L48,176C96,192,192,224,288,240C384,256,480,256,576,213.3C672,171,768,85,864,64C960,43,1056,85,1152,106.7C1248,128,1344,128,1392,128L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%232563eb' fill-opacity='0.15' d='M0,288L48,277.3C96,267,192,245,288,245.3C384,245,480,267,576,245.3C672,224,768,160,864,138.7C960,117,1056,139,1152,149.3C1248,160,1344,160,1392,160L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+  background-position: bottom;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
   position: relative;
 `;
 
@@ -863,7 +872,7 @@ const customerSchema = z.object({
   address: z.string().optional().default(""),
   city: z.string().optional().default(""),
   state: z.string().optional().default(""),
-  country: z.string().optional().default("India"),
+  country: z.string().optional().default("IN"),
   pincode: z.string().optional().default(""),
   source: z.string().optional().default(""),
   segment: z.string().optional().default(""),
@@ -872,36 +881,75 @@ const customerSchema = z.object({
   status: z.string().optional().default("Active"),
   locations: z.array(locationSchema).optional()
 }).superRefine((data, ctx) => {
-  if (!data.name?.trim()) {
-    ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Name is required", path: ["name"] });
+  // 1. Name validation
+  const trimmedName = (data.name || '').trim();
+  if (!trimmedName) {
+    const fieldLabel = data.type === 'Dealer' ? 'Dealer name' : data.type === 'Carpenter' ? 'Carpenter name' : 'Customer name';
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: `${fieldLabel} is required`, path: ["name"] });
+  } else if (trimmedName.length < 2) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Name must be at least 2 characters", path: ["name"] });
   }
 
-  if (data.type === 'Dealer' && !data.contactPerson?.trim()) {
-    ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Contact Person is required", path: ["contactPerson"] });
-  }
-
-  if (!data.mobile?.trim()) {
-    ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Mobile Number is required", path: ["mobile"] });
-  } else if (!/^[0-9]+$/.test(data.mobile.trim())) {
-    ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Invalid mobile number", path: ["mobile"] });
-  }
-
-  if (data.email && data.email.trim() !== '') {
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Invalid email", path: ["email"] });
+  // 2. Contact Person validation (Required for Dealer)
+  if (data.type === 'Dealer') {
+    const trimmedContact = (data.contactPerson || '').trim();
+    if (!trimmedContact) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Contact person name is required", path: ["contactPerson"] });
+    } else if (trimmedContact.length < 2) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Contact person name must be at least 2 characters", path: ["contactPerson"] });
     }
   }
 
+  // 3. Mobile Number validation
+  const rawMobile = (data.mobile || '').trim();
+  const cleanedMobile = rawMobile.replace(/[\s\-\(\)\+]/g, '').replace(/^91/, '');
+  if (!rawMobile) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Mobile Number is required", path: ["mobile"] });
+  } else if (!/^\d{10}$/.test(cleanedMobile)) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Please enter a valid 10-digit mobile number", path: ["mobile"] });
+  }
+
+  // 4. Email validation (Optional, but if entered must be valid)
+  const trimmedEmail = (data.email || '').trim();
+  if (trimmedEmail !== '') {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Please enter a valid email address", path: ["email"] });
+    }
+  }
+
+  // 5. GST Number validation (Dealer only, optional, but if entered must be 15 chars)
+  if (data.type === 'Dealer') {
+    const trimmedGst = (data.gstNumber || '').trim().toUpperCase();
+    if (trimmedGst !== '') {
+      if (!/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(trimmedGst)) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Please enter a valid 15-character GSTIN (e.g. 22AAAAA0000A1Z5)", path: ["gstNumber"] });
+      }
+    }
+  }
+
+  // 6. Address validation
   if (data.locations && data.locations.length > 0) {
     data.locations.forEach((loc, index) => {
-      if (!loc.addressLine?.trim()) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Address Line 1 is required", path: ["locations", index, "addressLine"] });
-      if (!loc.state?.trim()) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "State is required", path: ["locations", index, "state"] });
-      if (!loc.city?.trim()) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "City is required", path: ["locations", index, "city"] });
-      if (!loc.country?.trim()) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Country is required", path: ["locations", index, "country"] });
-      if (!loc.pincode?.trim()) {
+      if (!loc.addressLine?.trim()) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Address Line 1 is required", path: ["locations", index, "addressLine"] });
+      }
+      if (!loc.country?.trim()) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Country is required", path: ["locations", index, "country"] });
+      }
+      if (!loc.state?.trim()) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: "State is required", path: ["locations", index, "state"] });
+      }
+      if (!loc.city?.trim()) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: "City is required", path: ["locations", index, "city"] });
+      }
+      const trimmedPincode = (loc.pincode || '').trim();
+      if (!trimmedPincode) {
         ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Pincode is required", path: ["locations", index, "pincode"] });
-      } else if (loc.country === 'India' && !/^[0-9]{6}$/.test(loc.pincode.trim())) {
-        ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Invalid Indian pincode", path: ["locations", index, "pincode"] });
+      } else {
+        const isIndia = loc.country === 'India' || loc.country === 'IN';
+        if (isIndia && !/^[0-9]{6}$/.test(trimmedPincode)) {
+          ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Please enter a valid 6-digit pincode", path: ["locations", index, "pincode"] });
+        }
       }
     });
   } else {
@@ -962,11 +1010,11 @@ export const CustomersPage = () => {
     );
   };
 
-  const { register, handleSubmit, reset, watch, setValue, getValues, control, formState: { errors } } = useForm<any>({
+  const { register, handleSubmit, reset, watch, setValue, getValues, control, trigger, clearErrors, formState: { errors, isSubmitted } } = useForm<any>({
     mode: 'onChange',
     resolver: zodResolver(customerSchema),
     defaultValues: {
-      type: 'Customer', name: '', contactPerson: '', mobile: '', email: '', gstNumber: '', associatedDealer: '', address: '', city: '', state: '', country: 'India', pincode: '', source: 'Website', segment: 'Retail', region: 'South', potential: 'Medium', status: 'Active', locations: []
+      type: 'Customer', name: '', contactPerson: '', mobile: '', email: '', gstNumber: '', associatedDealer: '', address: '', city: '', state: '', country: 'IN', pincode: '', source: 'Website', segment: 'Retail', region: 'South', potential: 'Medium', status: 'Active', locations: []
     }
   });
 
@@ -990,7 +1038,11 @@ export const CustomersPage = () => {
     } else if (watchType === 'Dealer') {
       setValue('associatedDealer', '');
     }
-  }, [watchType, setValue, getValues]);
+
+    if (isSubmitted || Object.keys(errors).length > 0) {
+      trigger();
+    }
+  }, [watchType, setValue, getValues, isSubmitted, trigger]);
 
   useEffect(() => {
     if (watchCountry) {
@@ -1244,10 +1296,11 @@ export const CustomersPage = () => {
       setSelectedDealerId(null);
       setLocationStates({}); // Reset location states
       reset({
-        type: 'Customer', name: '', contactPerson: '', mobile: '', email: '', gstNumber: '', associatedDealer: '', address: '', city: '', state: '', country: 'India', pincode: '', source: 'Website', segment: 'Retail', region: 'South', potential: 'Medium', status: 'Active', locations: [{ locationName: '', country: 'India', state: '', city: '', addressLine: '', addressLine2: '', landmark: '', pincode: '', contactPerson: '', mobileNumber: '', email: '' }]
+        type: 'Customer', name: '', contactPerson: '', mobile: '', email: '', gstNumber: '', associatedDealer: '', address: '', city: '', state: '', country: 'IN', pincode: '', source: 'Website', segment: 'Retail', region: 'South', potential: 'Medium', status: 'Active', locations: [{ locationName: '', country: 'IN', state: '', city: '', addressLine: '', addressLine2: '', landmark: '', pincode: '', contactPerson: '', mobileNumber: '', email: '' }]
       });
       // Prefetch default India for index 0
       fetchCountries().then(allCountries => {
+        setCountries(allCountries);
         const c = allCountries.find(x => x.name === 'India' || x.code === 'India' || x.code === 'IN');
         if (c) {
           fetchStates(c.code).then(st => {
@@ -1266,17 +1319,11 @@ export const CustomersPage = () => {
   const onSubmit = async (data: any) => {
     setSubmitError('');
     
-    if (data.type === 'Dealer') {
-      if (!isAddingNewDealer && !selectedDealerId) {
-        setSubmitError('Please select a dealer or add a new one.');
+    if (data.type === 'Dealer' && !editingCustomer) {
+      const isDuplicate = dealersList.some(d => (d.customerCode || '').trim().toLowerCase() === (data.name || '').trim().toLowerCase());
+      if (isDuplicate) {
+        setSubmitError('A dealer with this name already exists.');
         return;
-      }
-      if (!selectedDealerId && !editingCustomer) {
-        const isDuplicate = dealersList.some(d => (d.customerCode || '').toLowerCase() === (data.name || '').toLowerCase());
-        if (isDuplicate) {
-          setSubmitError('A dealer with this name already exists.');
-          return;
-        }
       }
     }
     
@@ -1309,7 +1356,18 @@ export const CustomersPage = () => {
       }
 
       const { country, status, ...rest } = data;
-      const dbData = { ...rest, country, health: status, dealerCode: '', notes: '' } as any;
+      const primaryLoc = data.locations?.[0] || {};
+      const dbData = {
+        ...rest,
+        country: primaryLoc.country || country || 'IN',
+        state: primaryLoc.state || rest.state || '',
+        city: primaryLoc.city || rest.city || '',
+        address: primaryLoc.addressLine || rest.address || '',
+        pincode: primaryLoc.pincode || rest.pincode || '',
+        health: status,
+        dealerCode: '',
+        notes: ''
+      } as any;
       updateCustomer(editingCustomer.id, dbData);
       
       if (data.type === 'Dealer') {
@@ -1322,17 +1380,24 @@ export const CustomersPage = () => {
       showToast(`${data.type === 'Dealer' ? 'Dealer' : 'Customer'} updated successfully`);
     } else {
       const { country, status, ...rest } = data;
-      const dbData = { ...rest, country, health: status, dealerCode: '', notes: '' } as any;
+      const primaryLoc = data.locations?.[0] || {};
+      const dbData = {
+        ...rest,
+        country: primaryLoc.country || country || 'IN',
+        state: primaryLoc.state || rest.state || '',
+        city: primaryLoc.city || rest.city || '',
+        address: primaryLoc.addressLine || rest.address || '',
+        pincode: primaryLoc.pincode || rest.pincode || '',
+        health: status || 'Active',
+        dealerCode: '',
+        notes: ''
+      } as any;
       const res = await addCustomer(dbData);
       if (res.success) {
-        if (data.type === 'Dealer' && isAddingNewDealer) {
+        if (data.type === 'Dealer') {
           fetchDealers().then(data => setDealersList(data));
-          setSelectedDealerId(res.data?.cid || res.data?.id || null);
-          setIsAddingNewDealer(false);
-          showToast('Dealer created successfully. You can now add locations.');
-          return;
-        } else if (data.type === 'Dealer') {
-          fetchDealers().then(data => setDealersList(data));
+        } else {
+          fetchCustomers();
         }
         closeDrawer();
         showToast(`${data.type === 'Dealer' ? 'Dealer' : 'Customer'} created successfully`);
@@ -1624,13 +1689,13 @@ export const CustomersPage = () => {
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '16px' }}>
                           <FormGroup>
                             <Label>Address Line 1 *</Label>
-                            <Input {...register(`locations.${index}.addressLine` as const)} placeholder="Street address, P.O. box, company name" $isError={!!errors.locations?.[index]?.addressLine} />
-                            {errors.locations?.[index]?.addressLine && <ErrorText>{errors.locations?.[index]?.addressLine?.message as string}</ErrorText>}
+                            <Input {...register(`locations.${index}.addressLine` as const)} placeholder="Street address, P.O. box, company name" $isError={!!(errors.locations as any)?.[index]?.addressLine} />
+                            {(errors.locations as any)?.[index]?.addressLine && <ErrorText>{(errors.locations as any)?.[index]?.addressLine?.message as string}</ErrorText>}
                           </FormGroup>
                           <FormGroup>
                             <Label>Address Line 2</Label>
-                            <Input {...register(`locations.${index}.addressLine2` as const)} placeholder="Apartment, suite, unit, building, floor, etc." $isError={!!errors.locations?.[index]?.addressLine2} />
-                            {errors.locations?.[index]?.addressLine2 && <ErrorText>{errors.locations?.[index]?.addressLine2?.message as string}</ErrorText>}
+                            <Input {...register(`locations.${index}.addressLine2` as const)} placeholder="Apartment, suite, unit, building, floor, etc." $isError={!!(errors.locations as any)?.[index]?.addressLine2} />
+                            {(errors.locations as any)?.[index]?.addressLine2 && <ErrorText>{(errors.locations as any)?.[index]?.addressLine2?.message as string}</ErrorText>}
                           </FormGroup>
                         </div>
 
@@ -1639,7 +1704,7 @@ export const CustomersPage = () => {
                             <Label>Country *</Label>
                             <Select 
                               {...register(`locations.${index}.country` as const)}
-                              $isError={!!errors.locations?.[index]?.country}
+                              $isError={!!(errors.locations as any)?.[index]?.country}
                               onChange={(e) => {
                                 register(`locations.${index}.country` as const).onChange(e);
                                 setValue(`locations.${index}.state` as const, ''); // Clear state
@@ -1656,14 +1721,14 @@ export const CustomersPage = () => {
                               <option value="">Select Country</option>
                               {countries.map(c => <option key={c.code} value={c.code}>{c.name}</option>)}
                             </Select>
-                            {errors.locations?.[index]?.country && <ErrorText>{errors.locations?.[index]?.country?.message as string}</ErrorText>}
+                            {(errors.locations as any)?.[index]?.country && <ErrorText>{(errors.locations as any)?.[index]?.country?.message as string}</ErrorText>}
                           </FormGroup>
                           
                           <FormGroup>
                             <Label>State *</Label>
                             <Select 
                               {...register(`locations.${index}.state` as const)} 
-                              $isError={!!errors.locations?.[index]?.state}
+                              $isError={!!(errors.locations as any)?.[index]?.state}
                               onChange={(e) => {
                                 register(`locations.${index}.state` as const).onChange(e);
                               }}
@@ -1671,29 +1736,29 @@ export const CustomersPage = () => {
                               <option value="">Select State</option>
                               {(locationStates[index] || []).map(s => <option key={s.code} value={s.code}>{s.name}</option>)}
                             </Select>
-                            {errors.locations?.[index]?.state && <ErrorText>{errors.locations?.[index]?.state?.message as string}</ErrorText>}
+                            {(errors.locations as any)?.[index]?.state && <ErrorText>{(errors.locations as any)?.[index]?.state?.message as string}</ErrorText>}
                           </FormGroup>
                         </div>
 
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px', marginBottom: '16px' }}>
                           <FormGroup>
                             <Label>City *</Label>
-                            <Input {...register(`locations.${index}.city` as const)} placeholder="City" $isError={!!errors.locations?.[index]?.city} />
-                            {errors.locations?.[index]?.city && <ErrorText>{errors.locations?.[index]?.city?.message as string}</ErrorText>}
+                            <Input {...register(`locations.${index}.city` as const)} placeholder="City" $isError={!!(errors.locations as any)?.[index]?.city} />
+                            {(errors.locations as any)?.[index]?.city && <ErrorText>{(errors.locations as any)?.[index]?.city?.message as string}</ErrorText>}
                           </FormGroup>
                           
                           <FormGroup>
                             <Label>Landmark</Label>
-                            <Input {...register(`locations.${index}.landmark` as const)} placeholder="Landmark" $isError={!!errors.locations?.[index]?.landmark} />
-                            {errors.locations?.[index]?.landmark && <ErrorText>{errors.locations?.[index]?.landmark?.message as string}</ErrorText>}
+                            <Input {...register(`locations.${index}.landmark` as const)} placeholder="Landmark" $isError={!!(errors.locations as any)?.[index]?.landmark} />
+                            {(errors.locations as any)?.[index]?.landmark && <ErrorText>{(errors.locations as any)?.[index]?.landmark?.message as string}</ErrorText>}
                           </FormGroup>
                         </div>
 
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
                           <FormGroup>
                             <Label>Pincode *</Label>
-                            <Input {...register(`locations.${index}.pincode` as const)} placeholder="Pincode" $isError={!!errors.locations?.[index]?.pincode} />
-                            {errors.locations?.[index]?.pincode && <ErrorText>{errors.locations?.[index]?.pincode?.message as string}</ErrorText>}
+                            <Input {...register(`locations.${index}.pincode` as const)} placeholder="Pincode" $isError={!!(errors.locations as any)?.[index]?.pincode} />
+                            {(errors.locations as any)?.[index]?.pincode && <ErrorText>{(errors.locations as any)?.[index]?.pincode?.message as string}</ErrorText>}
                           </FormGroup>
                         </div>
                       </div>
@@ -1703,7 +1768,7 @@ export const CustomersPage = () => {
                       <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
                         <Button type="button" small primary onClick={() => {
                           const newIndex = locationFields.length;
-                          appendLocation({ locationName: '', country: 'India', state: '', city: '', addressLine: '', addressLine2: '', landmark: '', pincode: '', contactPerson: '', mobileNumber: '', email: '' });
+                          appendLocation({ locationName: '', country: 'IN', state: '', city: '', addressLine: '', addressLine2: '', landmark: '', pincode: '', contactPerson: '', mobileNumber: '', email: '' });
                           fetchStates('IN').then(st => setLocationStates(prev => ({ ...prev, [newIndex]: st })));
                         }}>+ Add Another Address</Button>
                       </div>
@@ -1778,36 +1843,10 @@ export const CustomersPage = () => {
                 </form>
               </ModalBody>
               <ModalFooter>
-                <Button type="button" onClick={() => {
-                  if (isAddingNewDealer) {
-                    setIsAddingNewDealer(false);
-                    if (!selectedDealerId) {
-                      setValue('name', '');
-                      setValue('mobile', '');
-                      setValue('email', '');
-                      setValue('city', '');
-                      setValue('address', '');
-                      setValue('pincode', ''); setValue('locations', [{ locationName: '', country: 'India', state: '', city: '', addressLine: '', addressLine2: '', landmark: '', pincode: '', contactPerson: '', mobileNumber: '', email: '' }]);
-                    }
-                  } else {
-                    closeDrawer();
-                  }
-                }}>Cancel</Button>
-                {watchType === 'Dealer' ? (
-                  editingCustomer ? (
-                    <Button primary type="submit" form="customer-form">Update Dealer</Button>
-                  ) : isAddingNewDealer ? (
-                    <Button primary type="submit" form="customer-form">Create Dealer</Button>
-                  ) : selectedDealerId ? (
-                    locationFields.length > 0 ? (
-                      <Button primary type="submit" form="customer-form">Save Address</Button>
-                    ) : null
-                  ) : (
-                    <Button primary type="submit" form="customer-form">Create Dealer</Button>
-                  )
-                ) : (
-                  <Button primary type="submit" form="customer-form">{editingCustomer ? `Update ${watchType}` : `Create ${watchType}`}</Button>
-                )}
+                <Button type="button" onClick={closeDrawer}>Cancel</Button>
+                <Button primary type="submit" form="customer-form">
+                  {editingCustomer ? `Update ${watchType || 'Customer'}` : `Create ${watchType || 'Customer'}`}
+                </Button>
               </ModalFooter>
             </ModalContent>
           </ModalOverlay>

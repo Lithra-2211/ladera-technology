@@ -69,150 +69,193 @@ export interface LeadKpis {
 
 const INITIAL_CENTURY_PLY_LEADS: LeadEntity[] = [
   {
-    id: 'LD-3311',
+    id: 'LD-0001',
+    leadId: 'LD-0001',
     leadName: 'Kavitha M.',
     leadNumber: '+91 98451 22310',
     leadEmail: 'kavitha.m@gmail.com',
     leadSource: 'Website',
     isQualifiedLead: false,
-    status: 'New',
+    status: 'Connected',
     nextFollowupDate: '2026-09-12',
-    followupStatus: 'Yet to Call',
+    followupStatus: 'Connected',
     assignedSalesUser: 'Priya Sharma',
-    companyName: null,
+    leadOwner: 'Aravind',
+    companyName: 'Ladera Technology',
     email: 'kavitha.m@gmail.com',
     phone: '+91 98451 22310',
     source: 'Website',
     requirement: 'Sofa set · 3+1+1',
+    serviceInterest: 'Custom Software Development',
     estValue: '₹68K',
+    estimatedDealValue: '₹68K',
+    probability: 10,
     score: 'B',
-    stage: 'New',
+    stage: 'Attempted to Contact',
+    pipelineStage: 'Attempted to Contact',
     notes: 'Inquired via web catalog for living room sofa set.',
+    followupNotes: 'Inquired via web catalog for living room sofa set.',
     avatarTone: 'violet',
     initials: 'KM',
     createdAt: new Date('2026-09-01T10:00:00Z'),
     updatedAt: new Date('2026-09-01T10:00:00Z'),
   },
   {
-    id: 'LD-3308',
+    id: 'LD-0002',
+    leadId: 'LD-0002',
     leadName: 'Sundar Interiors',
     leadNumber: '+91 98840 91823',
     leadEmail: 'contact@sundarinteriors.in',
-    leadSource: 'WhatsApp',
+    leadSource: 'LinkedIn',
     isQualifiedLead: true,
-    status: 'Qualified',
+    status: 'Connected',
     nextFollowupDate: '2026-09-14',
     followupStatus: 'Connected',
     assignedSalesUser: 'Vikram Malhotra',
+    leadOwner: 'Pradeep',
     companyName: 'Sundar Interior Solutions',
     email: 'contact@sundarinteriors.in',
     phone: '+91 98840 91823',
-    source: 'WhatsApp',
+    source: 'LinkedIn',
     requirement: 'Office furniture · 40 seats',
+    serviceInterest: 'Enterprise Cyber Security Assessment',
     estValue: '₹4.8L',
+    estimatedDealValue: '₹4.8L',
+    probability: 40,
     score: 'A',
-    stage: 'Qualified',
+    stage: 'Meeting Completed',
+    pipelineStage: 'Meeting Completed',
     notes: 'Commercial fit-out project. Requested Century Club Prime sheets and modular desks.',
+    followupNotes: 'Commercial fit-out project. Requested Century Club Prime sheets and modular desks.',
     avatarTone: 'teal',
     initials: 'SI',
     createdAt: new Date('2026-09-02T11:30:00Z'),
     updatedAt: new Date('2026-09-02T11:30:00Z'),
   },
   {
-    id: 'LD-3302',
+    id: 'LD-0003',
+    leadId: 'LD-0003',
     leadName: 'Ravi S.',
     leadNumber: '+91 97112 34567',
     leadEmail: 'ravi.sharma@yahoo.com',
-    leadSource: 'Phone',
+    leadSource: 'Cold Call',
     isQualifiedLead: false,
-    status: 'Contacted',
+    status: 'Rescheduled',
     nextFollowupDate: '2026-09-11',
     followupStatus: 'Rescheduled',
     assignedSalesUser: 'Amit Patel',
-    companyName: null,
+    leadOwner: 'Sharmila',
+    companyName: 'MRF Ltd',
     email: 'ravi.sharma@yahoo.com',
     phone: '+91 97112 34567',
-    source: 'Phone',
+    source: 'Cold Call',
     requirement: 'Beds ×2 · engineered wood',
+    serviceInterest: 'Custom Software Development',
     estValue: '₹1.1L',
+    estimatedDealValue: '₹1.1L',
+    probability: 30,
     score: 'A',
-    stage: 'Contacted',
+    stage: 'SQL',
+    pipelineStage: 'SQL',
     notes: 'Customer called helpline for customized master bedroom king size bed.',
+    followupNotes: 'Customer called helpline for customized master bedroom king size bed.',
     avatarTone: 'amber',
     initials: 'RS',
     createdAt: new Date('2026-09-03T09:15:00Z'),
     updatedAt: new Date('2026-09-03T09:15:00Z'),
   },
   {
-    id: 'LD-3299',
+    id: 'LD-0004',
+    leadId: 'LD-0004',
     leadName: 'GreenNest Villas',
     leadNumber: '+91 80234 56789',
     leadEmail: 'procurement@greennest.com',
-    leadSource: 'Website',
+    leadSource: 'Referral',
     isQualifiedLead: true,
-    status: 'Qualified',
+    status: 'Connected',
     nextFollowupDate: '2026-09-16',
     followupStatus: 'Connected',
     assignedSalesUser: 'Sneha Rao',
+    leadOwner: 'Shanti',
     companyName: 'GreenNest Realty Ltd',
     email: 'procurement@greennest.com',
     phone: '+91 80234 56789',
-    source: 'Website',
+    source: 'Referral',
     requirement: 'Full-home furniture · 12 villas',
+    serviceInterest: 'Cloud Migration',
     estValue: '₹18.5L',
+    estimatedDealValue: '₹18.5L',
+    probability: 90,
     score: 'A',
-    stage: 'Qualified',
+    stage: 'Negotiation',
+    pipelineStage: 'Negotiation',
     notes: 'Premium gated community villa project. High priority enterprise lead.',
+    followupNotes: 'Premium gated community villa project. High priority enterprise lead.',
     avatarTone: 'teal',
     initials: 'GV',
     createdAt: new Date('2026-09-04T14:20:00Z'),
     updatedAt: new Date('2026-09-04T14:20:00Z'),
   },
   {
-    id: 'LD-3291',
+    id: 'LD-0005',
+    leadId: 'LD-0005',
     leadName: 'Faisal A.',
     leadNumber: '+91 99001 12233',
     leadEmail: 'faisal.ahmed@outlook.com',
-    leadSource: 'Walk-in',
+    leadSource: 'Trade Show / Event',
     isQualifiedLead: false,
-    status: 'Cold',
+    status: 'RNR',
     nextFollowupDate: '2026-09-20',
-    followupStatus: 'RNR (Ring No Response)',
+    followupStatus: 'RNR',
     assignedSalesUser: 'Arun Joshi',
-    companyName: null,
+    leadOwner: 'Brijesh',
+    companyName: 'TVS Automobile Solutions',
     email: 'faisal.ahmed@outlook.com',
     phone: '+91 99001 12233',
-    source: 'Walk-in',
+    source: 'Trade Show / Event',
     requirement: 'Dining set · 6 seater',
+    serviceInterest: 'Network Infrastructure',
     estValue: '₹54K',
+    estimatedDealValue: '₹54K',
+    probability: 0,
     score: 'B',
-    stage: 'Cold',
-    notes: 'Visited Century showroom in Indiranagar. Looking for budget teak dining set.',
+    stage: 'Lost',
+    pipelineStage: 'Lost',
+    lostReason: 'Not Reachable / No Response',
+    notes: 'Tried reaching twice for 6-seater dining set promo discount; no answer.',
+    followupNotes: 'Tried reaching twice for 6-seater dining set promo discount; no answer.',
     avatarTone: 'slate',
     initials: 'FA',
     createdAt: new Date('2026-09-05T16:45:00Z'),
     updatedAt: new Date('2026-09-05T16:45:00Z'),
   },
   {
-    id: 'LD-3287',
+    id: 'LD-0006',
+    leadId: 'LD-0006',
     leadName: 'Lakshmi Builders',
     leadNumber: '+91 94440 88776',
     leadEmail: 'info@lakshmibuilders.org',
-    leadSource: 'Phone',
+    leadSource: 'Cold Call',
     isQualifiedLead: true,
-    status: 'Contacted',
+    status: 'Not Reachable',
     nextFollowupDate: '2026-09-13',
     followupStatus: 'Not Reachable',
     assignedSalesUser: 'Vikram Malhotra',
+    leadOwner: 'Aravind',
     companyName: 'Lakshmi Construction Corp',
     email: 'info@lakshmibuilders.org',
     phone: '+91 94440 88776',
-    source: 'Phone',
+    source: 'Cold Call',
     requirement: 'Site office furniture',
+    serviceInterest: 'Data Analytics',
     estValue: '₹5.6L',
+    estimatedDealValue: '₹5.6L',
+    probability: 70,
     score: 'A',
-    stage: 'Contacted',
+    stage: 'Proposal Sent',
+    pipelineStage: 'Proposal Sent',
     notes: 'Site office cabins and workstation setup for ongoing tech park build.',
+    followupNotes: 'Site office cabins and workstation setup for ongoing tech park build.',
     avatarTone: 'amber',
     initials: 'LB',
     createdAt: new Date('2026-09-06T12:00:00Z'),
@@ -364,10 +407,13 @@ export class LeadService implements OnModuleInit {
     const serviceInterest = row.Service_Interest || row.serviceInterest || row.Requirement || row.requirement || 'Century Plywood Solutions';
     const industry = row.Industry || row.industry || 'Architecture & Interior Design';
     const companySize = row.Company_Size || row.companySize || '11-50 Employees';
-    const pipelineStage = row.Pipeline_Stage || row.pipelineStage || status || 'New';
+    const isContactStatusVal = (val?: string | null) => ['connected', 'rnr', 'not reachable', 'busy', 'call back', 'rescheduled', 'follow-up', 'follow up', 'yet to call'].includes((val || '').toLowerCase().trim());
+    const pipelineStage = (row.Pipeline_Stage && !isContactStatusVal(row.Pipeline_Stage))
+      ? row.Pipeline_Stage
+      : (row.pipelineStage && !isContactStatusVal(row.pipelineStage) ? row.pipelineStage : 'Attempted to Contact');
     const leadOwner = row.Lead_Owner || row.leadOwner || salesUser;
     const estimatedDealValue = row.Estimated_Deal_Value || row.estimatedDealValue || row.Est_Value || row.estValue || '₹2.5L';
-    const probability = Number(row.Probability ?? row.probability ?? 50);
+    const probability = (pipelineStage.toLowerCase() === 'lost' || lostReason) ? 0 : Number(row.Probability ?? row.probability ?? 50);
     const expectedCloseDate = row.Expected_Close_Date
       ? new Date(row.Expected_Close_Date).toISOString().split('T')[0]
       : (row.expectedCloseDate || null);
@@ -559,19 +605,30 @@ export class LeadService implements OnModuleInit {
   }
 
   async findOne(id: string): Promise<LeadEntity> {
+    const aliasMap: Record<string, string> = {
+      'ld-0001': 'ld-3311',
+      'ld-0002': 'ld-3308',
+      'ld-0003': 'ld-3302',
+      'ld-0004': 'ld-3299',
+      'ld-0005': 'ld-3291',
+      'ld-0006': 'ld-3287',
+    };
+    const aliasId = aliasMap[id.toLowerCase()] || id;
     try {
       const res = await this.pool.query(
-        'SELECT * FROM public."LEAD" WHERE LOWER("Lead_Id") = LOWER($1)',
-        [id],
+        'SELECT * FROM public."LEAD" WHERE LOWER("Lead_Id") = LOWER($1) OR LOWER("Lead_Id") = LOWER($2)',
+        [id, aliasId],
       );
       
       const timelineRes = await this.pool.query(
-        'SELECT * FROM public."LEAD_TIMELINE" WHERE LOWER("Lead_Id") = LOWER($1) ORDER BY "Date" DESC, "Created_At" DESC',
-        [id],
+        'SELECT * FROM public."LEAD_TIMELINE" WHERE LOWER("Lead_Id") = LOWER($1) OR LOWER("Lead_Id") = LOWER($2) ORDER BY "Date" DESC, "Created_At" DESC',
+        [id, aliasId],
       );
 
       if (res.rows && res.rows.length > 0) {
         const entity = this.mapRowToEntity(res.rows[0]);
+        entity.id = id;
+        entity.leadId = id;
         entity.followupHistory = timelineRes.rows.map(t => ({
           id: t.Timeline_Id,
           date: new Date(t.Date).toISOString().split('T')[0],
@@ -587,11 +644,13 @@ export class LeadService implements OnModuleInit {
       this.logger.warn(`Failed to find lead ${id} in database:`, err);
     }
 
-    const lead = this.leadsStore.find(l => l.id.toLowerCase() === id.toLowerCase());
+    const lead = this.leadsStore.find(
+      l => l.id.toLowerCase() === id.toLowerCase() || l.id.toLowerCase() === aliasId.toLowerCase(),
+    );
     if (!lead) {
       throw new NotFoundException(`Lead with ID ${id} not found`);
     }
-    return lead;
+    return { ...lead, id, leadId: id };
   }
 
   async create(createLeadDto: CreateLeadDto): Promise<LeadEntity> {
@@ -600,7 +659,7 @@ export class LeadService implements OnModuleInit {
     const source = createLeadDto.leadSource || createLeadDto.source || 'Website';
     const avatarTone = this.assignAvatarTone(source, initials);
     const formattedVal = this.formatEstValue(createLeadDto.estimatedDealValue || createLeadDto.estValue || '₹2.5L');
-    const stage = createLeadDto.pipelineStage || createLeadDto.status || createLeadDto.stage || 'New';
+    const stage = createLeadDto.pipelineStage || createLeadDto.stage || 'Attempted to Contact';
     const leadNumber = createLeadDto.leadNumber?.trim() || createLeadDto.phone?.trim() || '+91 98000 00000';
     const leadEmail = createLeadDto.leadEmail?.trim() || createLeadDto.email?.trim() || null;
     const isQualified = createLeadDto.isQualifiedLead !== undefined
@@ -619,7 +678,7 @@ export class LeadService implements OnModuleInit {
     const pipelineStage = stage;
     const leadOwner = salesUser;
     const estimatedDealValue = formattedVal;
-    const probability = Number(createLeadDto.probability ?? 50);
+    const probability = (stage.toLowerCase() === 'lost' || createLeadDto.lostReason) ? 0 : Number(createLeadDto.probability ?? 50);
     const expectedCloseDate = createLeadDto.expectedCloseDate?.trim() || new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0];
     const lastContactDate = createLeadDto.lastContactDate?.trim() || dateCaptured;
     const followupNotes = createLeadDto.followupNotes?.trim() || createLeadDto.notes?.trim() || null;
@@ -725,7 +784,7 @@ export class LeadService implements OnModuleInit {
         newLead.pipelineStage || 'New',
         newLead.leadOwner || null,
         newLead.estimatedDealValue || null,
-        newLead.probability || 50,
+        newLead.probability ?? 50,
         newLead.expectedCloseDate ? new Date(newLead.expectedCloseDate) : null,
         newLead.lastContactDate ? new Date(newLead.lastContactDate) : null,
         newLead.followupNotes || null,
@@ -767,7 +826,17 @@ export class LeadService implements OnModuleInit {
   }
 
   async update(id: string, updateLeadDto: UpdateLeadDto): Promise<LeadEntity> {
-    const existing = await this.findOne(id);
+    let existing: LeadEntity;
+    try {
+      existing = await this.findOne(id);
+    } catch {
+      return this.create({
+        ...updateLeadDto,
+        leadId: id,
+        leadName: updateLeadDto.leadName || 'Unknown Lead',
+        leadNumber: updateLeadDto.leadNumber || updateLeadDto.phone || '+91 98000 00000',
+      } as any);
+    }
 
     const leadName = updateLeadDto.leadName !== undefined ? updateLeadDto.leadName.trim() : existing.leadName;
     const jobTitle = updateLeadDto.jobTitle !== undefined ? (updateLeadDto.jobTitle?.trim() || null) : (existing.jobTitle || null);
@@ -781,7 +850,7 @@ export class LeadService implements OnModuleInit {
     const isQualified = updateLeadDto.isQualifiedLead !== undefined
       ? updateLeadDto.isQualifiedLead
       : existing.isQualifiedLead;
-    const stage = updateLeadDto.pipelineStage || updateLeadDto.status || updateLeadDto.stage || existing.stage;
+    const stage = updateLeadDto.pipelineStage || updateLeadDto.stage || existing.pipelineStage || existing.stage || 'Attempted to Contact';
     const followupDate = updateLeadDto.nextFollowupDate !== undefined
       ? updateLeadDto.nextFollowupDate
       : existing.nextFollowupDate;
@@ -804,13 +873,13 @@ export class LeadService implements OnModuleInit {
     const companySize = updateLeadDto.companySize !== undefined ? updateLeadDto.companySize.trim() : existing.companySize;
     const pipelineStage = stage;
     const leadOwner = salesUser;
+    const lostReason = updateLeadDto.lostReason !== undefined ? (updateLeadDto.lostReason?.trim() || null) : existing.lostReason;
     const estimatedDealValue = updateLeadDto.estimatedDealValue !== undefined ? this.formatEstValue(updateLeadDto.estimatedDealValue) : (updateLeadDto.estValue !== undefined ? this.formatEstValue(updateLeadDto.estValue) : existing.estimatedDealValue);
-    const probability = updateLeadDto.probability !== undefined ? Number(updateLeadDto.probability) : existing.probability;
+    const probability = (pipelineStage.toLowerCase() === 'lost' || lostReason) ? 0 : (updateLeadDto.probability !== undefined ? Number(updateLeadDto.probability) : existing.probability);
     const expectedCloseDate = updateLeadDto.expectedCloseDate !== undefined ? updateLeadDto.expectedCloseDate : existing.expectedCloseDate;
     const lastContactDate = updateLeadDto.lastContactDate !== undefined ? updateLeadDto.lastContactDate : existing.lastContactDate;
     const followupNotes = updateLeadDto.followupNotes !== undefined ? (updateLeadDto.followupNotes?.trim() || null) : (updateLeadDto.notes !== undefined ? (updateLeadDto.notes?.trim() || null) : existing.followupNotes);
     const status = updateLeadDto.status !== undefined ? updateLeadDto.status : existing.status;
-    const lostReason = updateLeadDto.lostReason !== undefined ? (updateLeadDto.lostReason?.trim() || null) : existing.lostReason;
     const dateCaptured = updateLeadDto.dateCaptured !== undefined ? updateLeadDto.dateCaptured : existing.dateCaptured;
     const daysInPipeline = updateLeadDto.daysInPipeline !== undefined ? Number(updateLeadDto.daysInPipeline) : existing.daysInPipeline;
 
@@ -927,7 +996,7 @@ export class LeadService implements OnModuleInit {
         updatedLead.pipelineStage || 'New',
         updatedLead.leadOwner || null,
         updatedLead.estimatedDealValue || null,
-        updatedLead.probability || 50,
+        updatedLead.probability ?? 50,
         updatedLead.expectedCloseDate ? new Date(updatedLead.expectedCloseDate) : null,
         updatedLead.lastContactDate ? new Date(updatedLead.lastContactDate) : null,
         updatedLead.followupNotes || null,
@@ -1023,8 +1092,14 @@ export class LeadService implements OnModuleInit {
     const whatsappCount = leads.filter(l => l.source === 'WhatsApp').length;
     const phoneCount = leads.filter(l => l.source === 'Phone').length;
 
+    const totalOpenLeads = leads.filter(l => {
+      if (l.isActive === false) return false;
+      const stage = (l.pipelineStage || l.stage || '').toLowerCase().trim();
+      return stage !== 'closed and contract signed' && stage !== 'won';
+    }).length;
+
     return {
-      totalOpenLeads: total,
+      totalOpenLeads,
       openLeadsGrowth: '▲ 12% this week',
       websitePercentage: Math.round((websiteCount / total) * 100),
       whatsappPercentage: Math.round((whatsappCount / total) * 100),

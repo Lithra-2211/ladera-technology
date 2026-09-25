@@ -42,6 +42,7 @@ export interface LeadItem {
   status: string;
   lostReason?: string | null;
   daysInPipeline?: number;
+  isActive?: boolean;
 
   // Compatibility & metadata fields
   isQualifiedLead?: boolean;
@@ -93,17 +94,17 @@ const INITIAL_LEADS: LeadItem[] = [
     expectedCloseDate: '2026-09-30',
     lastContactDate: '2026-09-12',
     followupNotes: 'Lead received from Website. Yet to make initial outreach call.',
-    status: 'New',
+    status: 'Connected',
     lostReason: null,
     daysInPipeline: 15,
     isQualifiedLead: false,
     nextFollowupDate: '2026-09-12',
-    followupStatus: 'Yet to Call',
+    followupStatus: 'Connected',
     assignedSalesUser: 'Aravind',
     initials: 'KM',
     avatarTone: 'violet',
     source: 'Website',
-    stage: 'New',
+    stage: 'Attempted to Contact',
     requirement: 'Sofa set · 3+1+1',
     estValue: '₹68K',
     score: 'B',
@@ -157,7 +158,7 @@ const INITIAL_LEADS: LeadItem[] = [
     expectedCloseDate: '2026-10-15',
     lastContactDate: '2026-09-14',
     followupNotes: 'Discussed enterprise cyber security assessment and SOC compliance roadmap.',
-    status: 'Qualified',
+    status: 'Connected',
     lostReason: null,
     daysInPipeline: 14,
     isQualifiedLead: true,
@@ -167,7 +168,7 @@ const INITIAL_LEADS: LeadItem[] = [
     initials: 'SI',
     avatarTone: 'teal',
     source: 'Partner',
-    stage: 'Qualified',
+    stage: 'Meeting Completed',
     requirement: 'Enterprise Cyber Security Assessment',
     estValue: '₹4.8L',
     score: 'A',
@@ -213,7 +214,7 @@ const INITIAL_LEADS: LeadItem[] = [
     expectedCloseDate: '2026-09-28',
     lastContactDate: '2026-09-11',
     followupNotes: 'Client requested revised quote for king size bed in Century engineered wood.',
-    status: 'Contacted',
+    status: 'Rescheduled',
     lostReason: null,
     daysInPipeline: 13,
     isQualifiedLead: false,
@@ -223,7 +224,7 @@ const INITIAL_LEADS: LeadItem[] = [
     initials: 'RS',
     avatarTone: 'amber',
     source: 'Cold Call',
-    stage: 'Contacted',
+    stage: 'SQL',
     requirement: 'Beds ×2 · engineered wood',
     estValue: '₹1.1L',
     score: 'A',
@@ -269,7 +270,7 @@ const INITIAL_LEADS: LeadItem[] = [
     expectedCloseDate: '2026-10-31',
     lastContactDate: '2026-09-16',
     followupNotes: 'Presentation given to GreenNest Villas procurement director for 12 villa package.',
-    status: 'Qualified',
+    status: 'Connected',
     lostReason: null,
     daysInPipeline: 12,
     isQualifiedLead: true,
@@ -279,7 +280,7 @@ const INITIAL_LEADS: LeadItem[] = [
     initials: 'GV',
     avatarTone: 'teal',
     source: 'Referral',
-    stage: 'Qualified',
+    stage: 'Negotiation',
     requirement: 'Full-home furniture · 12 villas',
     estValue: '₹18.5L',
     score: 'A',
@@ -325,17 +326,17 @@ const INITIAL_LEADS: LeadItem[] = [
     expectedCloseDate: '2026-09-25',
     lastContactDate: '2026-09-20',
     followupNotes: 'Tried reaching twice for 6-seater dining set promo discount; no answer.',
-    status: 'Cold',
+    status: 'RNR',
     lostReason: 'Not Reachable / No Response',
     daysInPipeline: 11,
     isQualifiedLead: false,
     nextFollowupDate: '2026-09-20',
-    followupStatus: 'RNR (Ring No Response)',
+    followupStatus: 'RNR',
     assignedSalesUser: 'Brijesh',
     initials: 'FA',
     avatarTone: 'slate',
     source: 'Trade Show / Event',
-    stage: 'Cold',
+    stage: 'Lost',
     requirement: 'Dining set · 6 seater',
     estValue: '₹54K',
     score: 'B',
@@ -381,7 +382,7 @@ const INITIAL_LEADS: LeadItem[] = [
     expectedCloseDate: '2026-10-10',
     lastContactDate: '2026-09-13',
     followupNotes: 'Site office cabins inquiry follow-up, dropped note on WhatsApp.',
-    status: 'Contacted',
+    status: 'Not Reachable',
     lostReason: null,
     daysInPipeline: 10,
     isQualifiedLead: true,
@@ -391,7 +392,7 @@ const INITIAL_LEADS: LeadItem[] = [
     initials: 'LB',
     avatarTone: 'amber',
     source: 'Email Campaign',
-    stage: 'Contacted',
+    stage: 'Proposal Sent',
     requirement: 'Site office furniture',
     estValue: '₹5.6L',
     score: 'A',
@@ -1367,6 +1368,27 @@ const FollowupStatusPill = styled.span<{ statusType?: string }>`
   letter-spacing: 0.02em;
   ${props => {
     const s = (props.statusType || '').toLowerCase();
+    if (s.includes('connected')) {
+      return 'background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;';
+    }
+    if (s.includes('rnr') || s.includes('ring')) {
+      return 'background: #fffbeb; color: #b45309; border: 1px solid #fde68a;';
+    }
+    if (s.includes('not reachable') || s.includes('unreachable')) {
+      return 'background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca;';
+    }
+    if (s.includes('busy')) {
+      return 'background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa;';
+    }
+    if (s.includes('call back') || s.includes('callback')) {
+      return 'background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd;';
+    }
+    if (s.includes('resched')) {
+      return 'background: #f5f3ff; color: #6d28d9; border: 1px solid #ddd6fe;';
+    }
+    if (s.includes('follow')) {
+      return 'background: #eef2ff; color: #4338ca; border: 1px solid #c7d2fe;';
+    }
     if (s.includes('new')) {
       return 'background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe;';
     }
@@ -1390,12 +1412,6 @@ const FollowupStatusPill = styled.span<{ statusType?: string }>`
     }
     if (s.includes('cold')) {
       return 'background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1;';
-    }
-    if (s.includes('yet')) {
-      return 'background: #e0e7ff; color: #3730a3; border: 1px solid #c7d2fe;';
-    }
-    if (s.includes('connected')) {
-      return 'background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;';
     }
     return 'background: #e0e7ff; color: #3730a3; border: 1px solid #c7d2fe;';
   }}
@@ -1571,10 +1587,10 @@ const PopoverLabel = styled.label`
   letter-spacing: 0.04em;
 `;
 
-const PopoverInput = styled.input`
+const PopoverInput = styled.input<{ hasError?: boolean }>`
   font-size: 12.5px;
   padding: 7px 10px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid ${props => props.hasError ? '#ef4444' : '#cbd5e1'};
   border-radius: 6px;
   outline: none;
   font-family: inherit;
@@ -1583,8 +1599,8 @@ const PopoverInput = styled.input`
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 
   &:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    border-color: ${props => props.hasError ? '#ef4444' : '#3b82f6'};
+    box-shadow: 0 0 0 3px ${props => props.hasError ? 'rgba(239, 68, 68, 0.15)' : 'rgba(59, 130, 246, 0.15)'};
   }
 `;
 
@@ -2292,12 +2308,12 @@ const MultiSelectContainer = styled.div`
   width: 100%;
 `;
 
-const MultiSelectTrigger = styled.div<{ isOpen?: boolean }>`
+const MultiSelectTrigger = styled.div<{ isOpen?: boolean; hasError?: boolean }>`
   min-height: 42px;
   padding: 6px 12px;
-  border: 1px solid ${props => props.isOpen ? '#2563eb' : '#e2e8f0'};
+  border: 1px solid ${props => props.hasError ? '#ef4444' : props.isOpen ? '#2563eb' : '#e2e8f0'};
   border-radius: 10px;
-  background-color: #ffffff;
+  background-color: ${props => props.hasError ? '#fef2f2' : '#ffffff'};
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -2305,10 +2321,10 @@ const MultiSelectTrigger = styled.div<{ isOpen?: boolean }>`
   gap: 8px;
   box-sizing: border-box;
   transition: all 0.15s ease;
-  box-shadow: ${props => props.isOpen ? '0 0 0 2px rgba(37, 99, 235, 0.15)' : 'none'};
+  box-shadow: ${props => props.hasError ? '0 0 0 2px rgba(239, 68, 68, 0.15)' : props.isOpen ? '0 0 0 2px rgba(37, 99, 235, 0.15)' : 'none'};
 
   &:hover {
-    border-color: #cbd5e1;
+    border-color: ${props => props.hasError ? '#ef4444' : '#cbd5e1'};
   }
 `;
 
@@ -2583,14 +2599,13 @@ const formatDateDisplay = (dateStr?: string | null) => {
 };
 
 const FOLLOWUP_STATUS_OPTIONS = [
-  'New',
-  'Contacted',
-  'Qualified',
-  'Proposal Sent',
-  'In Negotiation',
-  'Won',
-  'Lost',
-  'Cold',
+  'Connected',
+  'RNR',
+  'Not Reachable',
+  'Busy',
+  'Call Back',
+  'Rescheduled',
+  'Follow-up',
 ];
 
 const CALL_REASON_OPTIONS = [
@@ -2707,6 +2722,61 @@ const STAGE_TO_PROBABILITY: Record<string, number> = {
   'Won': 100,
 };
 
+const DEFAULT_STAGE_BY_LEAD_ID: Record<string, string> = {
+  'LD-0001': 'Attempted to Contact',
+  'LD-0002': 'Meeting Completed',
+  'LD-0003': 'SQL',
+  'LD-0004': 'Negotiation',
+  'LD-0005': 'Lost',
+  'LD-0006': 'Proposal Sent',
+  'LD-3311': 'Attempted to Contact',
+  'LD-3308': 'Meeting Completed',
+  'LD-3302': 'SQL',
+  'LD-3299': 'Negotiation',
+  'LD-3291': 'Lost',
+};
+
+const CONTACT_STATUS_NAMES = [
+  'connected',
+  'rnr',
+  'rnr (ring no response)',
+  'not reachable',
+  'busy',
+  'call back',
+  'rescheduled',
+  'follow-up',
+  'follow up',
+  'yet to call',
+];
+
+export const sanitizePipelineStage = (stageVal?: string | null, fallback = 'Attempted to Contact'): string => {
+  if (!stageVal) return fallback;
+  const trimmed = stageVal.trim();
+  const lower = trimmed.toLowerCase();
+  if (CONTACT_STATUS_NAMES.includes(lower) || lower.startsWith('rnr')) {
+    return fallback;
+  }
+  if (lower === 'won' || lower === 'closed and contract signed') {
+    return 'Closed and Contract Signed';
+  }
+  if (lower === 'new') {
+    return 'Attempted to Contact';
+  }
+  const match = PIPELINE_STAGE_OPTIONS.find(opt => opt.toLowerCase() === lower);
+  return match || trimmed;
+};
+
+export const getLeadProbability = (lead: { pipelineStage?: string; stage?: string; probability?: number | string | null; id?: string; leadId?: string; lostReason?: string | null }): number => {
+  const rawStage = lead?.pipelineStage || lead?.stage || '';
+  const leadIdVal = (lead as any)?.leadId || (lead as any)?.id || '';
+  const defStage = DEFAULT_STAGE_BY_LEAD_ID[leadIdVal] || 'Attempted to Contact';
+  const stage = sanitizePipelineStage(rawStage, defStage);
+  if (stage.toLowerCase() === 'lost' || Boolean((lead as any)?.lostReason)) return 0;
+  const mapped = STAGE_TO_PROBABILITY[stage] ?? STAGE_TO_PROBABILITY[stage.toLowerCase()];
+  if (mapped !== undefined) return mapped;
+  return (lead?.probability !== undefined && lead?.probability !== null && lead?.probability !== '') ? Number(lead.probability) : 0;
+};
+
 const LEAD_OWNER_OPTIONS = [
   'Aravind',
   'Pradeep',
@@ -2716,14 +2786,13 @@ const LEAD_OWNER_OPTIONS = [
 ];
 
 const STATUS_OPTIONS = [
-  'New',
-  'Contacted',
-  'Qualified',
-  'Proposal Sent',
-  'In Negotiation',
-  'Won',
-  'Lost',
-  'Cold',
+  'Connected',
+  'RNR',
+  'Not Reachable',
+  'Busy',
+  'Call Back',
+  'Rescheduled',
+  'Follow-up',
 ];
 
 const LOST_REASON_OPTIONS = [
@@ -2787,19 +2856,48 @@ const toInputDateFormat = (dateStr?: string | null): string => {
   }
 };
 
+const getDayAfter = (dateStr?: string | null): string => {
+  if (!dateStr) return '';
+  try {
+    const [y, m, d] = dateStr.split('-').map(Number);
+    if (!y || !m || !d) return '';
+    const dt = new Date(y, m - 1, d + 1);
+    const yyyy = dt.getFullYear();
+    const mm = String(dt.getMonth() + 1).padStart(2, '0');
+    const dd = String(dt.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  } catch {
+    return '';
+  }
+};
+
 const extractFollowupStatus = (lead: LeadItem): string => {
-  if (lead.followupStatus && FOLLOWUP_STATUS_OPTIONS.includes(lead.followupStatus)) return lead.followupStatus;
-  if (lead.followupStatus) return lead.followupStatus;
+  if (lead.followupStatus && lead.followupStatus !== 'Won') {
+    const s = lead.followupStatus.trim();
+    if (s.toLowerCase().startsWith('rnr')) return 'RNR';
+    if (FOLLOWUP_STATUS_OPTIONS.includes(s)) return s;
+    const found = FOLLOWUP_STATUS_OPTIONS.find(o => o.toLowerCase() === s.toLowerCase());
+    if (found) return found;
+  }
   if (lead.notes) {
     const match = lead.notes.match(/^\[Status:\s*([^|\]]+)/);
     if (match && match[1]) {
-      const found = FOLLOWUP_STATUS_OPTIONS.find(o => o.toLowerCase() === match[1].trim().toLowerCase());
-      if (found) return found;
-      return match[1].trim();
+      const trimmed = match[1].trim();
+      if (trimmed.toLowerCase().startsWith('rnr')) return 'RNR';
+      if (trimmed.toLowerCase() !== 'won') {
+        const found = FOLLOWUP_STATUS_OPTIONS.find(o => o.toLowerCase() === trimmed.toLowerCase());
+        if (found) return found;
+      }
     }
   }
-  if (lead.status && FOLLOWUP_STATUS_OPTIONS.includes(lead.status)) return lead.status;
-  return 'New';
+  if (lead.status && lead.status !== 'Won') {
+    const s = lead.status.trim();
+    if (s.toLowerCase().startsWith('rnr')) return 'RNR';
+    if (FOLLOWUP_STATUS_OPTIONS.includes(s)) return s;
+    const found = FOLLOWUP_STATUS_OPTIONS.find(o => o.toLowerCase() === s.toLowerCase());
+    if (found) return found;
+  }
+  return 'Connected';
 };
 
 const extractCallReason = (lead: LeadItem): string => {
@@ -2824,6 +2922,13 @@ const extractFollowupNotes = (lead: LeadItem): string => {
 
 const getStatusIcon = (status: string) => {
   const s = (status || '').toLowerCase();
+  if (s.includes('connected')) return '📞';
+  if (s.includes('rnr') || s.includes('ring')) return '📳';
+  if (s.includes('not reachable') || s.includes('unreachable')) return '📵';
+  if (s.includes('busy')) return '⏳';
+  if (s.includes('call back') || s.includes('callback')) return '📲';
+  if (s.includes('resched')) return '🗓️';
+  if (s.includes('follow')) return '🔄';
   if (s.includes('new')) return '✨';
   if (s.includes('contacted')) return '📞';
   if (s.includes('qualified')) return '🎯';
@@ -2832,9 +2937,6 @@ const getStatusIcon = (status: string) => {
   if (s.includes('won')) return '🎉';
   if (s.includes('lost')) return '❌';
   if (s.includes('cold')) return '❄️';
-  if (s.includes('yet')) return '⏳';
-  if (s.includes('connected')) return '📞';
-  if (s.includes('meeting')) return '🤝';
   return '📅';
 };
 
@@ -2944,6 +3046,7 @@ export const LeadsPage = () => {
   const [selectedCompany, setSelectedCompany] = useState<string>('All companies');
   const [selectedOwner, setSelectedOwner] = useState<string>('All owners');
   const [selectedActiveStatus, setSelectedActiveStatus] = useState<string>('Active');
+  const [selectedContactStatus, setSelectedContactStatus] = useState<string>('All contact statuses');
 
   // Modal & Form State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -2956,6 +3059,7 @@ export const LeadsPage = () => {
   const serviceDropdownRef = React.useRef<HTMLDivElement>(null);
   const [dealCurrency, setDealCurrency] = useState<'INR' | 'AED'>('INR');
   const [dealSelectedAmount, setDealSelectedAmount] = useState<string>('');
+  const todayDateStr = useMemo(() => new Date().toISOString().split('T')[0], []);
 
   const handleDealCurrencyChange = (newCurrency: 'INR' | 'AED') => {
     setDealCurrency(newCurrency);
@@ -3003,6 +3107,11 @@ export const LeadsPage = () => {
   };
 
   const handleConvertToDeal = async (lead: LeadItem) => {
+    const minClose = lead.dateCaptured ? toInputDateFormat(lead.dateCaptured) : todayDateStr;
+    if (dealFormCloseDate && minClose && dealFormCloseDate < minClose) {
+      showToast(lead.dateCaptured ? 'Expected close date cannot be before date captured.' : 'Expected close date cannot be in the past.', true);
+      return;
+    }
     setConvertingId(lead.id);
     try {
       const amountMicros = Math.round(Number(dealFormAmount) * 1000000) || 0;
@@ -3069,7 +3178,7 @@ export const LeadsPage = () => {
 
   const [formData, setFormData] = useState<FormDataState>({
     leadId: '',
-    dateCaptured: new Date().toISOString().split('T')[0],
+    dateCaptured: '',
     leadName: '',
     jobTitle: '',
     companyName: '',
@@ -3083,9 +3192,9 @@ export const LeadsPage = () => {
     leadOwner: '',
     estimatedDealValue: '',
     probability: 0,
-    expectedCloseDate: new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0],
-    lastContactDate: new Date().toISOString().split('T')[0],
-    nextFollowupDate: new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0],
+    expectedCloseDate: '',
+    lastContactDate: '',
+    nextFollowupDate: '',
     followupNotes: '',
     status: '',
     lostReason: '',
@@ -3104,18 +3213,43 @@ export const LeadsPage = () => {
   const [isSavingFollowup, setIsSavingFollowup] = useState<boolean>(false);
   const [popoverActiveTab, setPopoverActiveTab] = useState<'followup' | 'timeline'>('followup');
 
+  const minInlineNextDate = useMemo(() => {
+    if (inlineDate) {
+      return getDayAfter(inlineDate);
+    }
+    return todayDateStr;
+  }, [inlineDate, todayDateStr]);
+
+  const inlineFollowupDateError = useMemo(() => {
+    if (!inlineNextDate) return '';
+    if (inlineDate && inlineNextDate <= inlineDate) {
+      return 'Next follow-up date must be greater than last contact date';
+    }
+    if (!inlineDate && inlineNextDate < todayDateStr) {
+      return 'Next follow-up date cannot be in the past';
+    }
+    return '';
+  }, [inlineNextDate, inlineDate, todayDateStr]);
+
   const handleOpenInlineFollowup = (lead: LeadItem, e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     setActiveFollowupLeadId(lead.id);
-    setInlineDate(toInputDateFormat(lead.lastContactDate) || new Date().toISOString().split('T')[0]);
-    setInlineNextDate(toInputDateFormat(lead.nextFollowupDate) || new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0]);
-    const currentStat = extractFollowupStatus(lead) || 'New';
+    setInlineDate(toInputDateFormat(lead.lastContactDate) || todayDateStr);
+    const parsedNextDate = toInputDateFormat(lead.nextFollowupDate);
+    setInlineNextDate(parsedNextDate || '');
+    let currentStat = extractFollowupStatus(lead) || 'Connected';
+    if (currentStat === 'Won') currentStat = 'Connected';
     setInlineStatus(currentStat);
     setInlineCallReason(lead.callReason || extractCallReason(lead) || 'Initial Qualification & Discovery');
-    setInlineNotes(lead.status === 'New' && currentStat === 'New' ? '' : extractFollowupNotes(lead));
-    setPopoverActiveTab('timeline');
+    const existingNotes = extractFollowupNotes(lead);
+    const isDummy = existingNotes.includes('Lead created. Awaiting initial outreach call.');
+    setInlineNotes(isDummy ? '' : existingNotes);
+    const rawHistory = Array.isArray(lead.followupHistory)
+      ? lead.followupHistory
+      : (INITIAL_LEADS.find(i => i.id === lead.id)?.followupHistory || []);
+    const history = rawHistory.filter(i => !i.notes?.includes('Lead created. Awaiting initial outreach call.'));
+    setPopoverActiveTab('followup');
   };
-
 
   const handleCloseInlineFollowup = () => {
     setActiveFollowupLeadId(null);
@@ -3123,35 +3257,55 @@ export const LeadsPage = () => {
   };
 
   const handleSaveInlineFollowup = async (leadId: string) => {
+    if (inlineNextDate) {
+      if (inlineDate && inlineNextDate <= inlineDate) {
+        showToast('Next follow-up date must be greater than last contact date.', true);
+        return;
+      }
+      if (!inlineDate && inlineNextDate < todayDateStr) {
+        showToast('Next follow-up date cannot be in the past.', true);
+        return;
+      }
+    }
+
     setIsSavingFollowup(true);
 
     const lead = leads.find(l => l.id === leadId);
-    const existingHistory = (lead?.followupHistory && lead.followupHistory.length > 0)
+    const leadIdStr = lead?.leadId || lead?.id || leadId;
+    const defaultStage = DEFAULT_STAGE_BY_LEAD_ID[leadIdStr] || 'Attempted to Contact';
+    const currentPipelineStage = sanitizePipelineStage(lead?.pipelineStage || lead?.stage, defaultStage);
+    const rawHistory = Array.isArray(lead?.followupHistory)
       ? lead.followupHistory
-      : getLeadDefaultTimeline(lead);
+      : (INITIAL_LEADS.find(i => i.id === leadId)?.followupHistory || []);
+    const existingHistory = rawHistory.filter(
+      item => !item.notes?.includes('Lead created. Awaiting initial outreach call.')
+    );
 
     const newTimelineItem: FollowupTimelineItem = {
       id: 'FL-' + Date.now(),
-      date: inlineDate || new Date().toISOString().split('T')[0],
-      status: inlineStatus || 'New',
+      date: inlineDate || todayDateStr,
+      status: inlineStatus || 'Connected',
       callReason: inlineCallReason || 'Initial Qualification & Discovery',
-      notes: inlineNotes.trim() || `Status updated to ${inlineStatus || 'New'}`,
+      notes: inlineNotes.trim() || `Call logged - Status: ${inlineStatus || 'Connected'}`,
       createdAt: new Date().toISOString(),
       userName: lead?.assignedSalesUser || lead?.leadOwner || 'Aravind (Customer Care)',
     };
 
     const updatedHistory = [newTimelineItem, ...existingHistory];
 
-    const formattedNotes = `[Status: ${inlineStatus || 'New'} | Reason: ${inlineCallReason || 'Initial Qualification & Discovery'}] ${inlineNotes.trim()}`;
+    const formattedNotes = `[Status: ${inlineStatus || 'Connected'} | Reason: ${inlineCallReason || 'Initial Qualification & Discovery'}] ${inlineNotes.trim()}`;
 
     const payload = {
-      lastContactDate: inlineDate || null,
+      pipelineStage: currentPipelineStage,
+      stage: currentPipelineStage,
+      lastContactDate: inlineDate || todayDateStr,
       nextFollowupDate: inlineNextDate || null,
-      followupStatus: inlineStatus || 'New',
-      status: inlineStatus || lead?.status || 'New',
+      followupStatus: inlineStatus || 'Connected',
+      status: inlineStatus || 'Connected',
       callReason: inlineCallReason || 'Initial Qualification & Discovery',
       notes: formattedNotes || null,
       newTimelineItem: newTimelineItem,
+      followupHistory: updatedHistory,
     };
 
     // Optimistically update local state immediately
@@ -3160,10 +3314,12 @@ export const LeadsPage = () => {
         if (l.id === leadId) {
           return {
             ...l,
-            lastContactDate: inlineDate || null,
+            pipelineStage: currentPipelineStage,
+            stage: currentPipelineStage,
+            lastContactDate: inlineDate || todayDateStr,
             nextFollowupDate: inlineNextDate || null,
-            followupStatus: inlineStatus || 'New',
-            status: inlineStatus || l.status || 'New',
+            followupStatus: inlineStatus || 'Connected',
+            status: inlineStatus || 'Connected',
             callReason: inlineCallReason || 'Initial Qualification & Discovery',
             notes: formattedNotes,
             followupHistory: updatedHistory,
@@ -3189,20 +3345,27 @@ export const LeadsPage = () => {
               ? {
                   ...l,
                   ...updated,
-                  followupStatus: inlineStatus || updated.followupStatus || 'Yet to Call',
+                  pipelineStage: currentPipelineStage,
+                  stage: currentPipelineStage,
+                  lastContactDate: inlineDate || todayDateStr,
+                  nextFollowupDate: inlineNextDate || null,
+                  followupStatus: inlineStatus || updated.followupStatus || 'Connected',
+                  status: inlineStatus || updated.status || 'Connected',
                   callReason: inlineCallReason || updated.callReason || 'Initial Qualification & Discovery',
+                  notes: formattedNotes,
                   followupHistory: updatedHistory,
                 }
               : l,
           ),
         );
       }
-      showToast('Follow-up logged and timeline updated!');
+      setPopoverActiveTab('timeline');
+      showToast('First call logged and timeline updated!');
     } catch {
+      setPopoverActiveTab('timeline');
       showToast('Follow-up saved locally.');
     } finally {
       setIsSavingFollowup(false);
-      setActiveFollowupLeadId(null);
     }
   };
 
@@ -3227,6 +3390,7 @@ export const LeadsPage = () => {
     if (!isServiceDropdownOpen) return;
     const handleClickOutside = (e: MouseEvent) => {
       if (serviceDropdownRef.current && !serviceDropdownRef.current.contains(e.target as Node)) {
+        setTouched(prev => ({ ...prev, serviceInterest: true }));
         setIsServiceDropdownOpen(false);
       }
     };
@@ -3245,6 +3409,7 @@ export const LeadsPage = () => {
   }, [formData.serviceInterest]);
 
   const handleToggleService = (serviceName: string) => {
+    setTouched(prev => ({ ...prev, serviceInterest: true }));
     const current = formData.serviceInterest
       ? formData.serviceInterest.split(',').map(s => s.trim()).filter(Boolean)
       : [];
@@ -3280,9 +3445,11 @@ export const LeadsPage = () => {
             const calculatedDays = isNaN(capTime) ? 0 : Math.max(0, Math.floor((Date.now() - capTime) / (1000 * 3600 * 24)));
             const rawSource = l.leadSource || l.source || 'Website';
             const normalizedSource = rawSource === 'WhatsApp' ? 'LinkedIn' : (rawSource === 'Phone' ? 'Cold Call' : (rawSource === 'Walk-in' ? 'Trade Show / Event' : rawSource));
-            const rawStage = l.pipelineStage || l.stage || l.status || 'Attempted to Contact';
-            const normalizedStage = rawStage === 'New' ? 'Attempted to Contact' : rawStage;
-            const prob = (l.probability !== undefined && l.probability !== null) ? Number(l.probability) : (STAGE_TO_PROBABILITY[normalizedStage] ?? 20);
+            const lId = l.leadId || l.id || '';
+            const defStage = DEFAULT_STAGE_BY_LEAD_ID[lId] || 'Attempted to Contact';
+            const normalizedStage = sanitizePipelineStage(l.pipelineStage || l.stage, defStage);
+            const prob = (normalizedStage.toLowerCase() === 'lost' || l.lostReason) ? 0 : getLeadProbability({ ...l, pipelineStage: normalizedStage });
+            const normalizedContactStatus = extractFollowupStatus(l);
 
             return {
               ...l,
@@ -3313,16 +3480,16 @@ export const LeadsPage = () => {
               nextFollowupDate: l.nextFollowupDate || null,
               followupNotes: l.followupNotes || l.notes || l.yetToCallNotes || null,
               notes: l.followupNotes || l.notes || null,
-              status: l.status || 'New',
+              status: normalizedContactStatus,
               lostReason: l.lostReason || null,
               daysInPipeline: l.daysInPipeline !== undefined ? Number(l.daysInPipeline) : calculatedDays,
-              isQualifiedLead: l.isQualifiedLead !== undefined ? l.isQualifiedLead : (l.status === 'Qualified' || l.pipelineStage === 'Won'),
-              followupStatus: l.followupStatus || ((l.status || l.stage) === 'New' ? 'Yet to Call' : extractFollowupStatus(l) || 'Yet to Call'),
+              isQualifiedLead: l.isQualifiedLead !== undefined ? l.isQualifiedLead : (normalizedStage === 'Closed and Contract Signed'),
+              followupStatus: normalizedContactStatus,
               callReason: l.callReason || extractCallReason(l) || 'Initial Qualification & Discovery',
               yetToCallNotes: l.yetToCallNotes || extractYetToCallNotes(l),
-              followupHistory: (l.followupHistory && l.followupHistory.length > 0)
-                ? l.followupHistory
-                : getLeadDefaultTimeline(l),
+              followupHistory: (l.followupHistory && Array.isArray(l.followupHistory) && l.followupHistory.length > 0)
+                ? l.followupHistory.filter((item: any) => !item.notes?.includes('Lead created. Awaiting initial outreach call.'))
+                : (INITIAL_LEADS.some(init => init.id === (l.leadId || l.id)) ? getLeadDefaultTimeline(l) : []),
               createdAt: l.createdAt || new Date().toISOString(),
               updatedAt: l.updatedAt || new Date().toISOString(),
             };
@@ -3358,6 +3525,10 @@ export const LeadsPage = () => {
       errs.companyName = 'Company name is required';
     }
 
+    if (!formData.dateCaptured) {
+      errs.dateCaptured = 'Date captured is required';
+    }
+
     if (!formData.email.trim()) {
       errs.email = 'Email address is required';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
@@ -3374,12 +3545,49 @@ export const LeadsPage = () => {
       errs.leadSource = 'Please select a lead source';
     }
 
+    if (!formData.serviceInterest || !formData.serviceInterest.trim()) {
+      errs.serviceInterest = 'Please select at least one service interest';
+    }
+
+    if (!formData.industry) {
+      errs.industry = 'Please select an industry';
+    }
+
+    if (!formData.companySize) {
+      errs.companySize = 'Please select a company size';
+    }
+
     if (!formData.pipelineStage) {
       errs.pipelineStage = 'Please select a pipeline stage';
     }
 
+    if (!formData.leadOwner) {
+      errs.leadOwner = 'Lead owner is required';
+    }
+
+    if (!editingLeadId && !formData.status) {
+      errs.status = 'Please select a contact status';
+    }
+
+    if (!editingLeadId && formData.nextFollowupDate) {
+      if (formData.lastContactDate && formData.nextFollowupDate <= formData.lastContactDate) {
+        errs.nextFollowupDate = 'Next follow-up date must be greater than last contact date';
+      } else if (formData.nextFollowupDate < todayDateStr) {
+        errs.nextFollowupDate = 'Next follow-up date cannot be in the past';
+      }
+    }
+
+    if (formData.expectedCloseDate) {
+      const minClose = formData.dateCaptured ? toInputDateFormat(formData.dateCaptured) : todayDateStr;
+      if (minClose && formData.expectedCloseDate < minClose) {
+        errs.expectedCloseDate = formData.dateCaptured
+          ? 'Expected close date cannot be before date captured'
+          : 'Expected close date cannot be in the past';
+      }
+    }
+
     return errs;
-  }, [formData]);
+  }, [formData, todayDateStr, editingLeadId]);
 
   const isFormValid = Object.keys(validationErrors).length === 0;
 
@@ -3400,11 +3608,12 @@ export const LeadsPage = () => {
         updated.daysInPipeline = value === '' ? '' : Math.max(0, parseInt(value, 10) || 0);
       }
       if (fieldName === 'pipelineStage') {
-        const mappedProb = STAGE_TO_PROBABILITY[value] ?? STAGE_TO_PROBABILITY[value.toLowerCase()];
-        if (mappedProb !== undefined) {
-          updated.probability = mappedProb;
-        } else {
+        const lowerVal = (value || '').toLowerCase().trim();
+        if (lowerVal === 'lost') {
           updated.probability = 0;
+        } else {
+          const mappedProb = STAGE_TO_PROBABILITY[value] ?? STAGE_TO_PROBABILITY[lowerVal];
+          updated.probability = mappedProb !== undefined ? mappedProb : 0;
         }
       }
       return updated;
@@ -3423,14 +3632,11 @@ export const LeadsPage = () => {
     setTouched({});
     setDealCurrency('INR');
     setDealSelectedAmount('');
-    const todayStr = new Date().toISOString().split('T')[0];
-    const nextFollowupStr = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0];
-    const closeDateStr = new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0];
     const generatedId = generateNextLeadId(leads);
 
     setFormData({
       leadId: generatedId,
-      dateCaptured: todayStr,
+      dateCaptured: '',
       leadName: '',
       jobTitle: '',
       companyName: '',
@@ -3444,9 +3650,9 @@ export const LeadsPage = () => {
       leadOwner: '',
       estimatedDealValue: '',
       probability: 0,
-      expectedCloseDate: closeDateStr,
-      lastContactDate: todayStr,
-      nextFollowupDate: nextFollowupStr,
+      expectedCloseDate: '',
+      lastContactDate: '',
+      nextFollowupDate: '',
       followupNotes: '',
       status: '',
       lostReason: '',
@@ -3473,6 +3679,17 @@ export const LeadsPage = () => {
     const capTime = new Date(dateCap).getTime();
     const calculatedDays = isNaN(capTime) ? 0 : Math.max(0, Math.floor((Date.now() - capTime) / (1000 * 3600 * 24)));
 
+    const lIdVal = lead.leadId || lead.id || '';
+    const defStageVal = DEFAULT_STAGE_BY_LEAD_ID[lIdVal] || 'Attempted to Contact';
+    let initialStage = sanitizePipelineStage(
+      (lead.pipelineStage === 'Won' || lead.stage === 'Won')
+        ? 'Closed and Contract Signed'
+        : (lead.pipelineStage || lead.stage || ''),
+      defStageVal
+    );
+
+    const initialContactStatus = extractFollowupStatus(lead);
+
     setFormData({
       leadId: leadIdVal,
       dateCaptured: dateCap,
@@ -3485,15 +3702,15 @@ export const LeadsPage = () => {
       serviceInterest: lead.serviceInterest || lead.requirement || '',
       industry: lead.industry || '',
       companySize: lead.companySize || '',
-      pipelineStage: lead.pipelineStage || lead.stage || lead.status || '',
+      pipelineStage: initialStage,
       leadOwner: lead.leadOwner || lead.assignedSalesUser || '',
       estimatedDealValue: lead.estimatedDealValue || lead.estValue || '',
-      probability: Number(lead.probability ?? 0),
+      probability: getLeadProbability({ ...lead, pipelineStage: initialStage }),
       expectedCloseDate: lead.expectedCloseDate ? toInputDateFormat(lead.expectedCloseDate) : '',
       lastContactDate: lead.lastContactDate ? toInputDateFormat(lead.lastContactDate) : '',
       nextFollowupDate: lead.nextFollowupDate ? toInputDateFormat(lead.nextFollowupDate) : '',
       followupNotes: lead.followupNotes || lead.notes || lead.yetToCallNotes || '',
-      status: lead.status || '',
+      status: initialContactStatus,
       lostReason: lead.lostReason || '',
       daysInPipeline: lead.daysInPipeline !== undefined ? Number(lead.daysInPipeline) : calculatedDays,
     });
@@ -3551,10 +3768,17 @@ export const LeadsPage = () => {
       setTouched({
         leadName: true,
         companyName: true,
+        dateCaptured: true,
         email: true,
         phone: true,
         leadSource: true,
+        serviceInterest: true,
+        industry: true,
+        companySize: true,
         pipelineStage: true,
+        leadOwner: true,
+        expectedCloseDate: true,
+        ...(!editingLeadId ? { status: true, nextFollowupDate: true } : {}),
       });
       return;
     }
@@ -3562,21 +3786,17 @@ export const LeadsPage = () => {
     setIsSaving(true);
     setApiError(null);
 
-    const capTime = new Date(formData.dateCaptured).getTime();
+    const capTime = formData.dateCaptured ? new Date(formData.dateCaptured).getTime() : NaN;
     const daysCalculated = isNaN(capTime) ? 0 : Math.max(0, Math.floor((Date.now() - capTime) / (1000 * 3600 * 24)));
     const targetLeadId = formData.leadId.trim() || editingLeadId || generateNextLeadId(leads);
+    const sanitizedStage = sanitizePipelineStage(
+      (formData.pipelineStage === 'Won' ? 'Closed and Contract Signed' : formData.pipelineStage) || 'Attempted to Contact',
+      DEFAULT_STAGE_BY_LEAD_ID[targetLeadId] || 'Attempted to Contact'
+    );
+    const calculatedProbability = getLeadProbability({ ...formData, pipelineStage: sanitizedStage });
 
     const initialReason = formData.serviceInterest || 'Initial Qualification & Discovery';
-    const initialNotes = formData.followupNotes.trim() || 'Lead created. Awaiting initial outreach call.';
-    const initialTimelineItem: FollowupTimelineItem = {
-      id: 'FL-' + Date.now(),
-      date: formData.lastContactDate || new Date().toISOString().split('T')[0],
-      status: formData.status,
-      callReason: initialReason,
-      notes: initialNotes,
-      createdAt: new Date().toISOString(),
-      userName: formData.leadOwner || 'Aravind (Customer Care)',
-    };
+    const initialNotes = formData.followupNotes.trim();
 
     const payload = {
       id: targetLeadId,
@@ -3595,84 +3815,128 @@ export const LeadsPage = () => {
       requirement: formData.serviceInterest || undefined,
       industry: formData.industry || undefined,
       companySize: formData.companySize || undefined,
-      pipelineStage: formData.pipelineStage || 'Attempted to Contact',
-      stage: formData.pipelineStage || 'Attempted to Contact',
+      pipelineStage: sanitizedStage,
+      stage: sanitizedStage,
       leadOwner: formData.leadOwner || 'Aravind',
       assignedSalesUser: formData.leadOwner || 'Aravind',
       estimatedDealValue: formData.estimatedDealValue.trim() || undefined,
       estValue: formData.estimatedDealValue.trim() || undefined,
-      probability: Number(formData.probability) || 0,
+      probability: calculatedProbability,
       expectedCloseDate: formData.expectedCloseDate || undefined,
       lastContactDate: formData.lastContactDate || undefined,
       nextFollowupDate: formData.nextFollowupDate || undefined,
       followupNotes: formData.followupNotes.trim() || undefined,
       notes: formData.followupNotes.trim() || undefined,
-      status: formData.status || 'New',
-      lostReason: formData.lostReason.trim() || undefined,
+      status: formData.status || 'Connected',
+      lostReason: sanitizedStage === 'Lost' ? (formData.lostReason.trim() || 'Budget constraint / Competitor') : undefined,
       daysInPipeline: formData.daysInPipeline !== '' && !isNaN(Number(formData.daysInPipeline)) ? Math.max(0, Number(formData.daysInPipeline)) : daysCalculated,
-      isQualifiedLead: formData.status === 'Qualified' || ['SQL', 'Meeting Completed', 'Opportunity Identified', 'Proposal Sent', 'Negotiation', 'Closed and Waiting for Contact', 'Closed and Contract Signed', 'Won'].includes(formData.pipelineStage),
-      followupStatus: editingLeadId ? undefined : (formData.status || 'New'),
+      isQualifiedLead: formData.status === 'Qualified' || ['SQL', 'Meeting Completed', 'Opportunity Identified', 'Proposal Sent', 'Negotiation', 'Closed and Waiting for Contact', 'Closed and Contract Signed'].includes(sanitizedStage),
+      followupStatus: formData.status || 'Connected',
       callReason: initialReason,
-      yetToCallNotes: initialNotes,
-      newTimelineItem: editingLeadId ? undefined : initialTimelineItem,
+      yetToCallNotes: initialNotes || undefined,
+      newTimelineItem: undefined,
     };
 
-    try {
-      if (editingLeadId) {
-        // Update existing lead
-        const res = await fetch(`/rest/leads/${editingLeadId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-
-        if (!res.ok) {
-          const errData = await res.json().catch(() => ({}));
-          const errMsg = Array.isArray(errData.message)
-            ? errData.message.join(', ')
-            : errData.message || 'Failed to update lead on server.';
-          throw new Error(errMsg);
-        }
-
-        const updatedLead: LeadItem = await res.json();
-        setLeads(prev => prev.map(item => (item.id === editingLeadId ? { ...item, ...updatedLead, ...payload } : item)));
-        showToast(`Lead ${editingLeadId} successfully updated!`);
-      } else {
-        // Create new lead
-        const res = await fetch('/rest/leads', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-
-        if (!res.ok) {
-          const errData = await res.json().catch(() => ({}));
-          const errMsg = Array.isArray(errData.message)
-            ? errData.message.join(', ')
-            : errData.message || 'Failed to create lead on server.';
-          throw new Error(errMsg);
-        }
-
-        const createdLead: LeadItem = await res.json();
-        setLeads(prev => [
-          {
-            ...createdLead,
-            ...payload,
-            followupHistory: [initialTimelineItem],
-          },
-          ...prev,
-        ]);
-        showToast(`🎉 Lead ${createdLead.leadId || createdLead.id || targetLeadId} created successfully!`);
-      }
-
-      // Refresh KPIs
-      loadLeadsFromApi();
+    if (editingLeadId) {
+      // Optimistically update existing lead
+      setLeads(prev =>
+        prev.map(item =>
+          item.id === editingLeadId
+            ? {
+                ...item,
+                ...payload,
+                pipelineStage: sanitizedStage,
+                stage: sanitizedStage,
+                probability: calculatedProbability,
+                followupStatus: formData.status || item.followupStatus || 'Connected',
+                status: formData.status || item.status || 'Connected',
+                updatedAt: new Date().toISOString(),
+              }
+            : item
+        )
+      );
+      showToast(`Lead ${editingLeadId} successfully updated!`);
       setIsModalOpen(false);
-    } catch (err: any) {
-      console.error('Save lead failed:', err);
-      setApiError(err.message || 'An error occurred while saving lead.');
-    } finally {
-      setIsSaving(false);
+
+      // Async backend sync without blocking user
+      fetch(`/rest/leads/${editingLeadId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+        .then(async res => {
+          if (res.ok) {
+            const updatedLead: LeadItem = await res.json();
+            setLeads(prev =>
+              prev.map(item =>
+                item.id === editingLeadId
+                  ? {
+                      ...item,
+                      ...updatedLead,
+                      pipelineStage: sanitizedStage,
+                      stage: sanitizedStage,
+                      probability: calculatedProbability,
+                    }
+                  : item
+              )
+            );
+          }
+        })
+        .catch(err => {
+          console.warn('Backend sync delayed, local update preserved:', err);
+        })
+        .finally(() => {
+          setIsSaving(false);
+        });
+    } else {
+      // Optimistically create new lead
+      const newLead: LeadItem = {
+        ...payload,
+        id: targetLeadId,
+        leadId: targetLeadId,
+        pipelineStage: sanitizedStage,
+        stage: sanitizedStage,
+        probability: calculatedProbability,
+        followupStatus: formData.status || 'Yet to Call',
+        status: formData.status || 'Yet to Call',
+        followupHistory: [],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      setLeads(prev => [newLead, ...prev]);
+      showToast(`🎉 Lead ${targetLeadId} created successfully!`);
+      setIsModalOpen(false);
+
+      // Async backend sync without blocking user
+      fetch('/rest/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+        .then(async res => {
+          if (res.ok) {
+            const createdLead: LeadItem = await res.json();
+            setLeads(prev =>
+              prev.map(item =>
+                item.id === targetLeadId
+                  ? {
+                      ...createdLead,
+                      ...newLead,
+                      pipelineStage: sanitizedStage,
+                      stage: sanitizedStage,
+                      probability: calculatedProbability,
+                    }
+                  : item
+              )
+            );
+          }
+        })
+        .catch(err => {
+          console.warn('Backend sync delayed, local create preserved:', err);
+        })
+        .finally(() => {
+          setIsSaving(false);
+        });
     }
   };
 
@@ -3681,31 +3945,105 @@ export const LeadsPage = () => {
   };
 
   const uniqueCompanies = useMemo(() => {
-    const companies = leads.map(l => l.companyName).filter(name => name && typeof name === 'string' && name.trim() !== '');
-    return Array.from(new Set(companies)).sort();
+    const companies = leads
+      .map(l => (l.companyName || '').trim())
+      .filter(name => name !== '');
+    return Array.from(new Set(companies)).sort((a, b) => a.localeCompare(b));
   }, [leads]);
 
   const uniqueOwners = useMemo(() => {
-    const owners = leads.map(l => l.leadOwner || l.assignedSalesUser).filter(name => name && typeof name === 'string' && name.trim() !== '');
-    return Array.from(new Set(owners)).sort();
+    const owners = leads
+      .map(l => (l.leadOwner || l.assignedSalesUser || '').trim())
+      .filter(name => name !== '');
+    return Array.from(new Set(owners)).sort((a, b) => a.localeCompare(b));
+  }, [leads]);
+
+  const uniqueSources = useMemo(() => {
+    const fromLeads = leads
+      .map(l => (l.leadSource || l.source || '').trim())
+      .filter(name => name !== '');
+    return Array.from(new Set(fromLeads)).sort((a, b) => a.localeCompare(b));
+  }, [leads]);
+
+  const uniqueStages = useMemo(() => {
+    const stages = leads
+      .map(lead => {
+        const leadIdVal = lead.leadId || lead.id || '';
+        const defStage = DEFAULT_STAGE_BY_LEAD_ID[leadIdVal] || 'Attempted to Contact';
+        return sanitizePipelineStage(
+          (lead.pipelineStage === 'Won' || lead.stage === 'Won')
+            ? 'Closed and Contract Signed'
+            : (lead.pipelineStage || lead.stage || ''),
+          defStage
+        );
+      })
+      .filter(s => s && s !== 'Won' && !CONTACT_STATUS_NAMES.includes(s.toLowerCase()));
+    return Array.from(new Set(stages)).sort((a, b) => a.localeCompare(b));
+  }, [leads]);
+
+  const uniqueContactStatuses = useMemo(() => {
+    const statuses = leads
+      .map(l => extractFollowupStatus(l))
+      .filter(s => s && s !== '' && s !== 'Won');
+    return Array.from(new Set(statuses)).sort((a, b) => a.localeCompare(b));
   }, [leads]);
 
   const filteredLeads = useMemo(() => {
     return leads.filter(lead => {
-      const stage = lead.status || lead.stage || lead.pipelineStage;
-      const matchesStage = selectedStage === 'All stages' || stage === selectedStage;
-      const leadSrc = lead.leadSource || lead.source;
-      const matchesSource = selectedSource === 'All sources' || leadSrc === selectedSource;
+      // 1. Pipeline Stage filter (strictly pipeline stage, NOT last contacted status)
+      const leadIdVal = lead.leadId || lead.id || '';
+      const defStage = DEFAULT_STAGE_BY_LEAD_ID[leadIdVal] || 'Attempted to Contact';
+      const leadStage = sanitizePipelineStage(
+        (lead.pipelineStage === 'Won' || lead.stage === 'Won')
+          ? 'Closed and Contract Signed'
+          : (lead.pipelineStage || lead.stage || ''),
+        defStage
+      );
+      const normLeadStage = leadStage.toLowerCase().trim();
+      const normSelectedStage = selectedStage.toLowerCase().trim();
+      const matchesStage =
+        selectedStage === 'All stages' ||
+        normLeadStage === normSelectedStage ||
+        (normSelectedStage === 'closed and waiting for contact' && normLeadStage === 'closed, awaiting contract') ||
+        (normSelectedStage === 'closed and contract signed' && normLeadStage === 'won');
+
+      // 2. Contact Status filter (strictly last contacted status)
+      const leadContactStatus = extractFollowupStatus(lead).toLowerCase().trim();
+      const normSelectedContactStatus = selectedContactStatus.toLowerCase().trim();
+      const matchesContactStatus =
+        selectedContactStatus === 'All contact statuses' ||
+        leadContactStatus === normSelectedContactStatus;
+
+      // 3. Source filter
+      const leadSrc = (lead.leadSource || lead.source || '').toLowerCase().trim();
+      const matchesSource =
+        selectedSource === 'All sources' ||
+        leadSrc === selectedSource.toLowerCase().trim();
+
+      // 4. Company filter
+      const leadCompany = (lead.companyName || '').toLowerCase().trim();
       const matchesCompany =
         selectedCompany === 'All companies' ||
-        (lead.companyName || '').toLowerCase().trim() === selectedCompany.toLowerCase().trim();
-      const leadOwn = lead.leadOwner || lead.assignedSalesUser;
+        leadCompany === selectedCompany.toLowerCase().trim();
+
+      // 5. Owner filter
+      const leadOwner = (lead.leadOwner || lead.assignedSalesUser || '').toLowerCase().trim();
       const matchesOwner =
         selectedOwner === 'All owners' ||
-        (leadOwn || '').toLowerCase().trim() === selectedOwner.toLowerCase().trim();
-      const q = searchQuery.toLowerCase();
+        leadOwner === selectedOwner.toLowerCase().trim();
+
+      // 6. Active / Deleted Leads filter
+      const matchesActive =
+        selectedActiveStatus === 'All'
+          ? true
+          : selectedActiveStatus === 'Active'
+            ? lead.isActive !== false
+            : lead.isActive === false;
+
+      // 7. Search query
+      const q = searchQuery.toLowerCase().trim();
       const matchesQuery =
-        !searchQuery ||
+        !q ||
         (lead.id && lead.id.toLowerCase().includes(q)) ||
         (lead.leadId && lead.leadId.toLowerCase().includes(q)) ||
         (lead.leadName && lead.leadName.toLowerCase().includes(q)) ||
@@ -3719,23 +4057,29 @@ export const LeadsPage = () => {
         (lead.source && lead.source.toLowerCase().includes(q)) ||
         (lead.serviceInterest && lead.serviceInterest.toLowerCase().includes(q)) ||
         (lead.industry && lead.industry.toLowerCase().includes(q)) ||
-        (lead.pipelineStage && lead.pipelineStage.toLowerCase().includes(q)) ||
-        (lead.leadOwner && lead.leadOwner.toLowerCase().includes(q)) ||
-        (lead.status && lead.status.toLowerCase().includes(q));
+        (leadStage && leadStage.toLowerCase().includes(q)) ||
+        (leadOwner && leadOwner.toLowerCase().includes(q)) ||
+        (lead.status && lead.status.toLowerCase().includes(q)) ||
+        (lead.followupStatus && lead.followupStatus.toLowerCase().includes(q)) ||
+        (lead.followupNotes && lead.followupNotes.toLowerCase().includes(q)) ||
+        (lead.lostReason && lead.lostReason.toLowerCase().includes(q));
 
-        const matchesActive = selectedActiveStatus === 'All' ? true : (selectedActiveStatus === 'Active' ? lead.isActive !== false : lead.isActive === false);
-
-        return matchesStage && matchesSource && matchesCompany && matchesOwner && matchesActive && matchesQuery;
-      });
-    }, [leads, selectedStage, selectedSource, selectedCompany, selectedOwner, selectedActiveStatus, searchQuery]);
+      return matchesStage && matchesContactStatus && matchesSource && matchesCompany && matchesOwner && matchesActive && matchesQuery;
+    });
+  }, [leads, selectedStage, selectedContactStatus, selectedSource, selectedCompany, selectedOwner, selectedActiveStatus, searchQuery]);
 
   // Dynamic KPI counts - exact lead counts matching active leads list
-  const totalOpenCount = leads.filter(l => 
-    l.pipelineStage !== 'Won' && 
-    l.pipelineStage !== 'Lost' && 
-    l.status !== 'Won' && 
-    l.status !== 'Lost'
-  ).length;
+  const totalOpenCount = leads.filter(l => {
+    if (l.isActive === false) return false;
+    const rawStage = l.pipelineStage || l.stage || '';
+    const leadIdVal = l.leadId || l.id || '';
+    const defStage = DEFAULT_STAGE_BY_LEAD_ID[leadIdVal] || 'Attempted to Contact';
+    const stage = sanitizePipelineStage(
+      (rawStage === 'Won') ? 'Closed and Contract Signed' : rawStage,
+      defStage
+    ).toLowerCase().trim();
+    return stage !== 'closed and contract signed' && stage !== 'won';
+  }).length;
 
   const sourceStats = useMemo(() => {
     const total = leads.length;
@@ -3843,8 +4187,17 @@ export const LeadsPage = () => {
                 onChange={e => setSelectedStage(e.target.value)}
               >
                 <option value="All stages">All stages</option>
-                {PIPELINE_STAGE_OPTIONS.map(stg => (
+                {uniqueStages.map(stg => (
                   <option key={stg} value={stg}>{stg}</option>
+                ))}
+              </FilterSelect>
+              <FilterSelect
+                value={selectedContactStatus}
+                onChange={e => setSelectedContactStatus(e.target.value)}
+              >
+                <option value="All contact statuses">All contact statuses</option>
+                {uniqueContactStatuses.map(stat => (
+                  <option key={stat} value={stat}>{stat}</option>
                 ))}
               </FilterSelect>
               <FilterSelect
@@ -3852,7 +4205,7 @@ export const LeadsPage = () => {
                 onChange={e => setSelectedSource(e.target.value)}
               >
                 <option value="All sources">All sources</option>
-                {LEAD_SOURCE_OPTIONS.map(src => (
+                {uniqueSources.map(src => (
                   <option key={src} value={src}>{src}</option>
                 ))}
               </FilterSelect>
@@ -3944,9 +4297,14 @@ export const LeadsPage = () => {
                         </Td>
                         <Td>
                           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px' }}>
-                            <span style={{ fontWeight: 500, color: '#0f172a' }}>{lead.pipelineStage || lead.stage || lead.status || '--'}</span>
+                            <span style={{ fontWeight: 500, color: '#0f172a' }}>
+                              {sanitizePipelineStage(
+                                (lead.pipelineStage === 'Won' || lead.stage === 'Won') ? 'Closed and Contract Signed' : (lead.pipelineStage || lead.stage),
+                                DEFAULT_STAGE_BY_LEAD_ID[lead.leadId || lead.id] || 'Attempted to Contact'
+                              )}
+                            </span>
                             <span style={{ fontSize: '11px', padding: '2px 6px', borderRadius: '12px', backgroundColor: '#f1f5f9', color: '#64748b', fontWeight: 600 }}>
-                              {lead.probability || 0}%
+                              {getLeadProbability(lead)}%
                             </span>
                           </div>
                         </Td>
@@ -3961,9 +4319,16 @@ export const LeadsPage = () => {
                           </Td>
                           <Td>
                             {lead.lastContactDate ? (
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#64748b', fontSize: '13px', fontWeight: 500, whiteSpace: 'nowrap' }}>
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                                <span>{formatDateDisplay(lead.lastContactDate)}</span>
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#64748b', fontSize: '13px', fontWeight: 500, whiteSpace: 'nowrap' }}>
+                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                  <span>{formatDateDisplay(lead.lastContactDate)}</span>
+                                </div>
+                                {extractFollowupNotes(lead) && (
+                                  <span style={{ fontSize: '11px', color: '#94a3b8', maxWidth: '140px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={extractFollowupNotes(lead)}>
+                                    📝 {extractFollowupNotes(lead)}
+                                  </span>
+                                )}
                               </div>
                             ) : '-'}
                           </Td>
@@ -4030,7 +4395,7 @@ export const LeadsPage = () => {
 
           <TableFooter>
             <FooterCount>
-              Showing 1-{filteredLeads.length} of {leads.length} leads
+              Showing {filteredLeads.length === 0 ? 0 : 1}-{filteredLeads.length} of {leads.length} leads
             </FooterCount>
             <PaginationNav>
               <PageBtn disabled title="Previous page">‹</PageBtn>
@@ -4053,9 +4418,12 @@ export const LeadsPage = () => {
           const activeLead = leads.find(l => l.id === activeFollowupLeadId);
           if (!activeLead) return null;
           const currentStatus = extractFollowupStatus(activeLead);
-          const timeline = (activeLead.followupHistory && activeLead.followupHistory.length > 0)
+          const rawTimeline = Array.isArray(activeLead.followupHistory)
             ? activeLead.followupHistory
             : getLeadDefaultTimeline(activeLead);
+          const timeline = rawTimeline.filter(
+            item => !item.notes?.includes('Lead created. Awaiting initial outreach call.')
+          );
 
           return (
             <FollowupModalOverlay onClick={handleCloseInlineFollowup}>
@@ -4066,7 +4434,7 @@ export const LeadsPage = () => {
                 <PopoverHeader>
                   <PopoverTitle>
                     <span>📅</span>
-                    <span>Last Follow-up & Activity Timeline</span>
+                    <span>Last Contact Date & Activity Timeline</span>
                   </PopoverTitle>
                   <PopoverCloseBtn
                     type="button"
@@ -4099,6 +4467,14 @@ export const LeadsPage = () => {
                 <PopoverTabBar>
                   <PopoverTabItem
                     type="button"
+                    active={popoverActiveTab === 'followup'}
+                    onClick={() => setPopoverActiveTab('followup')}
+                  >
+                    <span>📝</span>
+                    <span>Last Contact Date</span>
+                  </PopoverTabItem>
+                  <PopoverTabItem
+                    type="button"
                     active={popoverActiveTab === 'timeline'}
                     onClick={() => setPopoverActiveTab('timeline')}
                   >
@@ -4107,14 +4483,6 @@ export const LeadsPage = () => {
                     <PopoverTabBadge active={popoverActiveTab === 'timeline'}>
                       {timeline.length}
                     </PopoverTabBadge>
-                  </PopoverTabItem>
-                  <PopoverTabItem
-                    type="button"
-                    active={popoverActiveTab === 'followup'}
-                    onClick={() => setPopoverActiveTab('followup')}
-                  >
-                    <span>📝</span>
-                    <span>Last Follow-up</span>
                   </PopoverTabItem>
                 </PopoverTabBar>
 
@@ -4138,18 +4506,43 @@ export const LeadsPage = () => {
                       </PopoverSelect>
                     </PopoverField>
 
-                    {/* Follow-up Date Input */}
-                    <PopoverField>
-                      <PopoverLabel htmlFor="followup-date-input">
-                        Last Follow-up Date
-                      </PopoverLabel>
-                      <PopoverInput
-                        id="followup-date-input"
-                        type="date"
-                        value={inlineDate}
-                        onChange={e => setInlineDate(e.target.value)}
-                      />
-                    </PopoverField>
+                    {/* Last Contact Date and Last Contacted Status side-by-side row */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
+                      {/* Last Contact Date Input */}
+                      <PopoverField>
+                        <PopoverLabel htmlFor="followup-date-input">
+                          Last Contact Date
+                        </PopoverLabel>
+                        <PopoverInput
+                          id="followup-date-input"
+                          type="date"
+                          value={inlineDate}
+                          onChange={e => setInlineDate(e.target.value)}
+                        />
+                      </PopoverField>
+
+                      {/* Last Contacted Status Dropdown */}
+                      <PopoverField>
+                        <PopoverLabel htmlFor="followup-status-select">
+                          Last Contacted Status
+                        </PopoverLabel>
+                        <PopoverSelect
+                          id="followup-status-select"
+                          value={inlineStatus}
+                          onChange={e => setInlineStatus(e.target.value)}
+                        >
+                          <option value="">-- Select Status --</option>
+                          {FOLLOWUP_STATUS_OPTIONS.map(opt => (
+                            <option key={opt} value={opt}>
+                              {opt}
+                            </option>
+                          ))}
+                          {inlineStatus && inlineStatus !== 'Won' && !FOLLOWUP_STATUS_OPTIONS.includes(inlineStatus) && (
+                            <option value={inlineStatus}>{inlineStatus}</option>
+                          )}
+                        </PopoverSelect>
+                      </PopoverField>
+                    </div>
 
                     {/* Next Follow-up Date Input */}
                     <PopoverField>
@@ -4159,42 +4552,27 @@ export const LeadsPage = () => {
                       <PopoverInput
                         id="next-followup-date-input"
                         type="date"
+                        min={minInlineNextDate}
                         value={inlineNextDate}
                         onChange={e => setInlineNextDate(e.target.value)}
+                        hasError={!!inlineFollowupDateError}
                       />
+                      {inlineFollowupDateError && (
+                        <span style={{ color: '#ef4444', fontSize: '11px', fontWeight: 600 }}>
+                          {inlineFollowupDateError}
+                        </span>
+                      )}
                     </PopoverField>
 
-                    {/* Follow-up Status Dropdown */}
-                    <PopoverField>
-                      <PopoverLabel htmlFor="followup-status-select">
-                        Last Follow-up Status
-                      </PopoverLabel>
-                      <PopoverSelect
-                        id="followup-status-select"
-                        value={inlineStatus}
-                        onChange={e => setInlineStatus(e.target.value)}
-                      >
-                        <option value="">-- Select Status --</option>
-                        {FOLLOWUP_STATUS_OPTIONS.map(opt => (
-                          <option key={opt} value={opt}>
-                            {opt}
-                          </option>
-                        ))}
-                        {inlineStatus && !FOLLOWUP_STATUS_OPTIONS.includes(inlineStatus) && (
-                          <option value={inlineStatus}>{inlineStatus}</option>
-                        )}
-                      </PopoverSelect>
-                    </PopoverField>
-
-                    {/* Notes / Remarks Text box directly below dropdown */}
+                    {/* Last Contact Notes Text box */}
                     <PopoverField>
                       <PopoverLabel htmlFor="followup-notes-textarea">
-                        Call Remarks / Notes
+                        Last Contact Notes
                       </PopoverLabel>
                       <PopoverTextarea
                         id="followup-notes-textarea"
                         rows={3}
-                        placeholder="Enter conversation summary, next steps, or remarks..."
+                        placeholder="Enter notes for last contact date, conversation summary, next steps..."
                         value={inlineNotes}
                         onChange={e => setInlineNotes(e.target.value)}
                       />
@@ -4214,7 +4592,7 @@ export const LeadsPage = () => {
                         onClick={() => handleSaveInlineFollowup(activeLead.id)}
                         disabled={isSavingFollowup}
                       >
-                        {isSavingFollowup ? 'Saving...' : 'Save Last Follow-up'}
+                        {isSavingFollowup ? 'Saving...' : 'Save Follow-up'}
                       </PopoverSaveBtn>
                     </PopoverFooter>
                   </div>
@@ -4222,92 +4600,116 @@ export const LeadsPage = () => {
 
                 {popoverActiveTab === 'timeline' && (
                   <VertexTimelineContainer style={{ maxHeight: '420px', marginTop: '4px' }}>
-                    <VertexSpineCap>
-                      <VertexCapBadge>● Last Follow-up</VertexCapBadge>
-                    </VertexSpineCap>
-                    <div style={{ position: 'relative', width: '100%' }}>
-                      <VertexCentralAxis />
-                      {timeline.map((item, idx) => {
-                        const isLeft = idx % 2 === 0;
-                        return (
-                          <VertexTimelineRow key={item.id || idx}>
-                            {/* Left Column */}
-                            <VertexSideCol isLeft={true}>
-                              {isLeft && (
-                                <>
-                                  <VertexMilestoneCard isLeft={true} statusType={item.status}>
-                                    <VertexCardHeader>
-                                      <FollowupStatusPill statusType={item.status}>
-                                        {getStatusIcon(item.status)} {item.status}
-                                      </FollowupStatusPill>
-                                      <VertexDateBadge>{formatDateDisplay(item.date)}</VertexDateBadge>
-                                    </VertexCardHeader>
-                                    {item.callReason && (
-                                      <VertexCallReasonTag title={`Call Reason: ${item.callReason}`}>
-                                        🎯 {item.callReason}
-                                      </VertexCallReasonTag>
-                                    )}
-                                    {item.notes && (
-                                      <VertexNoteText title={item.notes}>{item.notes}</VertexNoteText>
-                                    )}
-                                    <VertexMetaRow>
-                                      {item.userName || 'Customer Care Rep'}
-                                      {item.createdAt && ` · ${formatRelativeTime(item.createdAt)}`}
-                                    </VertexMetaRow>
-                                  </VertexMilestoneCard>
-                                  <VertexMarkerSquare statusType={item.status} title={`Status: ${item.status}`} />
-                                  <VertexDottedLine />
-                                </>
-                              )}
-                            </VertexSideCol>
+                    {timeline.length > 0 ? (
+                      <>
+                        <VertexSpineCap>
+                          <VertexCapBadge>● Last Contact Date</VertexCapBadge>
+                        </VertexSpineCap>
+                        <div style={{ position: 'relative', width: '100%' }}>
+                          <VertexCentralAxis />
+                          {timeline.map((item, idx) => {
+                            const isLeft = idx % 2 === 0;
+                            return (
+                              <VertexTimelineRow key={item.id || idx}>
+                                {/* Left Column */}
+                                <VertexSideCol isLeft={true}>
+                                  {isLeft && (
+                                    <>
+                                      <VertexMilestoneCard isLeft={true} statusType={item.status}>
+                                        <VertexCardHeader>
+                                          <FollowupStatusPill statusType={item.status}>
+                                            {getStatusIcon(item.status)} {item.status}
+                                          </FollowupStatusPill>
+                                          <VertexDateBadge>{formatDateDisplay(item.date)}</VertexDateBadge>
+                                        </VertexCardHeader>
+                                        {item.callReason && (
+                                          <VertexCallReasonTag title={`Call Reason: ${item.callReason}`}>
+                                            🎯 {item.callReason}
+                                          </VertexCallReasonTag>
+                                        )}
+                                        {item.notes && (
+                                          <VertexNoteText title={item.notes}>{item.notes}</VertexNoteText>
+                                        )}
+                                        <VertexMetaRow>
+                                          {item.userName || 'Customer Care Rep'}
+                                          {item.createdAt && ` · ${formatRelativeTime(item.createdAt)}`}
+                                        </VertexMetaRow>
+                                      </VertexMilestoneCard>
+                                      <VertexMarkerSquare statusType={item.status} title={`Status: ${item.status}`} />
+                                      <VertexDottedLine />
+                                    </>
+                                  )}
+                                </VertexSideCol>
 
-                            {/* Center Spine Tick */}
-                            <VertexCenterHub title={`Milestone #${timeline.length - idx}`}>
-                              <VertexSpineTick />
-                            </VertexCenterHub>
+                                {/* Center Spine Tick */}
+                                <VertexCenterHub title={`Milestone #${timeline.length - idx}`}>
+                                  <VertexSpineTick />
+                                </VertexCenterHub>
 
-                            {/* Right Column */}
-                            <VertexSideCol isLeft={false}>
-                              {!isLeft && (
-                                <>
-                                  <VertexDottedLine />
-                                  <VertexMarkerSquare statusType={item.status} title={`Status: ${item.status}`} />
-                                  <VertexMilestoneCard isLeft={false} statusType={item.status}>
-                                    <VertexCardHeader>
-                                      <FollowupStatusPill statusType={item.status}>
-                                        {getStatusIcon(item.status)} {item.status}
-                                      </FollowupStatusPill>
-                                      <VertexDateBadge>{formatDateDisplay(item.date)}</VertexDateBadge>
-                                    </VertexCardHeader>
-                                    {item.callReason && (
-                                      <VertexCallReasonTag title={`Call Reason: ${item.callReason}`}>
-                                        🎯 {item.callReason}
-                                      </VertexCallReasonTag>
-                                    )}
-                                    {item.notes && (
-                                      <VertexNoteText title={item.notes}>{item.notes}</VertexNoteText>
-                                    )}
-                                    <VertexMetaRow>
-                                      {item.userName || 'Customer Care Rep'}
-                                      {item.createdAt && ` · ${formatRelativeTime(item.createdAt)}`}
-                                    </VertexMetaRow>
-                                  </VertexMilestoneCard>
-                                </>
-                              )}
-                            </VertexSideCol>
-                          </VertexTimelineRow>
-                        );
-                      })}
-                      {timeline.length === 0 && (
-                        <TimelineEmptyText>
-                          No prior follow-up activity logged yet.
-                        </TimelineEmptyText>
-                      )}
-                    </div>
-                    {timeline.length > 0 && (
-                      <VertexSpineCap style={{ marginTop: '12px', marginBottom: '0' }}>
-                        <VertexCapBadge>● Initial Project Inquiry</VertexCapBadge>
-                      </VertexSpineCap>
+                                {/* Right Column */}
+                                <VertexSideCol isLeft={false}>
+                                  {!isLeft && (
+                                    <>
+                                      <VertexDottedLine />
+                                      <VertexMarkerSquare statusType={item.status} title={`Status: ${item.status}`} />
+                                      <VertexMilestoneCard isLeft={false} statusType={item.status}>
+                                        <VertexCardHeader>
+                                          <FollowupStatusPill statusType={item.status}>
+                                            {getStatusIcon(item.status)} {item.status}
+                                          </FollowupStatusPill>
+                                          <VertexDateBadge>{formatDateDisplay(item.date)}</VertexDateBadge>
+                                        </VertexCardHeader>
+                                        {item.callReason && (
+                                          <VertexCallReasonTag title={`Call Reason: ${item.callReason}`}>
+                                            🎯 {item.callReason}
+                                          </VertexCallReasonTag>
+                                        )}
+                                        {item.notes && (
+                                          <VertexNoteText title={item.notes}>{item.notes}</VertexNoteText>
+                                        )}
+                                        <VertexMetaRow>
+                                          {item.userName || 'Customer Care Rep'}
+                                          {item.createdAt && ` · ${formatRelativeTime(item.createdAt)}`}
+                                        </VertexMetaRow>
+                                      </VertexMilestoneCard>
+                                    </>
+                                  )}
+                                </VertexSideCol>
+                              </VertexTimelineRow>
+                            );
+                          })}
+                        </div>
+                        <VertexSpineCap style={{ marginTop: '12px', marginBottom: '0' }}>
+                          <VertexCapBadge>● Initial Project Inquiry</VertexCapBadge>
+                        </VertexSpineCap>
+                      </>
+                    ) : (
+                      <TimelineEmptyText style={{ padding: '28px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ fontSize: '24px' }}>📞</span>
+                        <span style={{ fontSize: '13px', fontWeight: 700, color: '#334155' }}>
+                          No Follow-up Calls Logged Yet
+                        </span>
+                        <span style={{ fontSize: '12px', color: '#64748b', fontWeight: 500, maxWidth: '280px', lineHeight: 1.4, textAlign: 'center' }}>
+                          The timeline will be updated automatically once the first outreach call is logged.
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setPopoverActiveTab('followup')}
+                          style={{
+                            marginTop: '8px',
+                            padding: '6px 14px',
+                            backgroundColor: '#2563eb',
+                            color: '#ffffff',
+                            border: 'none',
+                            borderRadius: '6px',
+                            fontSize: '12px',
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                          }}
+                        >
+                          + Log First Call
+                        </button>
+                      </TimelineEmptyText>
                     )}
                   </VertexTimelineContainer>
                 )}
@@ -4363,8 +4765,8 @@ export const LeadsPage = () => {
 
                     <FormSectionTitle><span>📈</span><span>3. Deal & Pipeline Dynamics</span></FormSectionTitle>
                     <FormGrid>
-                      <ViewOnlyDetailItem label="Pipeline Stage" value={formData.pipelineStage} />
-                      <ViewOnlyDetailItem label="Probability in %" value={formData.probability ? `${formData.probability}%` : ''} />
+                      <ViewOnlyDetailItem label="Pipeline Stage" value={sanitizePipelineStage(formData.pipelineStage, DEFAULT_STAGE_BY_LEAD_ID[formData.leadId] || 'Attempted to Contact')} />
+                      <ViewOnlyDetailItem label="Probability in %" value={`${getLeadProbability(formData as any)}%`} />
                       <ViewOnlyDetailItem label="Lead Owner" value={formData.leadOwner} />
                       <ViewOnlyDetailItem label="Estimated Deal Value" value={formData.estimatedDealValue} />
                       <ViewOnlyDetailItem label="Expected Close Date" value={formData.expectedCloseDate} />
@@ -4374,9 +4776,9 @@ export const LeadsPage = () => {
                     <FormSectionTitle><span>📅</span><span>4. Follow-up & Activity Tracking</span></FormSectionTitle>
                     <FormGrid>
                       <ViewOnlyDetailItem label="Last Contact Date" value={formData.lastContactDate} />
-                      <ViewOnlyDetailItem label="Last Contact Status" value={formData.status} />
+                      <ViewOnlyDetailItem label="Last Contacted Status" value={formData.status} />
                       <ViewOnlyDetailItem label="Next Follow-up Date" value={formData.nextFollowupDate} />
-                      <ViewOnlyDetailItem label="Follow up Notes" value={formData.followupNotes} fullWidth />
+                      <ViewOnlyDetailItem label="Last Contact Notes" value={formData.followupNotes} fullWidth />
                     </FormGrid>
 
                     <ModalActions style={{ marginTop: '10px' }}>
@@ -4469,7 +4871,12 @@ export const LeadsPage = () => {
                         type="date"
                         value={formData.dateCaptured}
                         onChange={handleInputChange}
+                        onBlur={() => handleBlur('dateCaptured')}
+                        hasError={!!(touched.dateCaptured && validationErrors.dateCaptured)}
                       />
+                      {touched.dateCaptured && validationErrors.dateCaptured && (
+                        <FieldError>{validationErrors.dateCaptured}</FieldError>
+                      )}
                     </FormGroup>
 
                     {/* 5. Email */}
@@ -4560,7 +4967,13 @@ export const LeadsPage = () => {
                       <MultiSelectContainer ref={serviceDropdownRef}>
                         <MultiSelectTrigger
                           isOpen={isServiceDropdownOpen}
-                          onClick={() => setIsServiceDropdownOpen(prev => !prev)}
+                          hasError={!!(touched.serviceInterest && validationErrors.serviceInterest)}
+                          onClick={() => {
+                            if (isServiceDropdownOpen) {
+                              setTouched(prev => ({ ...prev, serviceInterest: true }));
+                            }
+                            setIsServiceDropdownOpen(prev => !prev);
+                          }}
                         >
                           <MultiSelectChipsWrapper>
                             {selectedServices.length === 0 ? (
@@ -4608,6 +5021,9 @@ export const LeadsPage = () => {
                           </MultiSelectDropdown>
                         )}
                       </MultiSelectContainer>
+                      {touched.serviceInterest && validationErrors.serviceInterest && (
+                        <FieldError>{validationErrors.serviceInterest}</FieldError>
+                      )}
                     </FormGroup>
 
                     {/* 9. Industry */}
@@ -4619,6 +5035,8 @@ export const LeadsPage = () => {
                         name="industry"
                         value={formData.industry}
                         onChange={handleInputChange}
+                        onBlur={() => handleBlur('industry')}
+                        hasError={!!(touched.industry && validationErrors.industry)}
                       >
                         <option value="">-- Select Industry --</option>
                         {formData.industry && !INDUSTRY_OPTIONS.includes(formData.industry) && (
@@ -4628,6 +5046,9 @@ export const LeadsPage = () => {
                           <option key={ind} value={ind}>{ind}</option>
                         ))}
                       </FormSelect>
+                      {touched.industry && validationErrors.industry && (
+                        <FieldError>{validationErrors.industry}</FieldError>
+                      )}
                     </FormGroup>
 
                     {/* 10. Company Size */}
@@ -4639,12 +5060,17 @@ export const LeadsPage = () => {
                         name="companySize"
                         value={formData.companySize}
                         onChange={handleInputChange}
+                        onBlur={() => handleBlur('companySize')}
+                        hasError={!!(touched.companySize && validationErrors.companySize)}
                       >
                         <option value="">-- Select Company Size --</option>
                         {COMPANY_SIZE_OPTIONS.map(sz => (
                           <option key={sz} value={sz}>{sz}</option>
                         ))}
                       </FormSelect>
+                      {touched.companySize && validationErrors.companySize && (
+                        <FieldError>{validationErrors.companySize}</FieldError>
+                      )}
                     </FormGroup>
 
                     {/* SECTION 3: Deal & Pipeline Dynamics */}
@@ -4661,16 +5087,16 @@ export const LeadsPage = () => {
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 100px', gap: '8px' }}>
                         <FormSelect
                           name="pipelineStage"
-                          value={formData.pipelineStage}
+                          value={formData.pipelineStage === 'Won' ? 'Closed and Contract Signed' : formData.pipelineStage}
                           onChange={handleInputChange}
                           onBlur={() => handleBlur('pipelineStage')}
                           hasError={!!(touched.pipelineStage && validationErrors.pipelineStage)}
                         >
                           <option value="">-- Select Pipeline Stage --</option>
-                          {formData.pipelineStage && !PIPELINE_STAGE_OPTIONS.includes(formData.pipelineStage) && (
+                          {formData.pipelineStage && formData.pipelineStage !== 'Won' && !CONTACT_STATUS_NAMES.includes(formData.pipelineStage.toLowerCase().trim()) && !PIPELINE_STAGE_OPTIONS.includes(formData.pipelineStage) && (
                             <option value={formData.pipelineStage}>{formData.pipelineStage}</option>
                           )}
-                          {PIPELINE_STAGE_OPTIONS.map(stg => (
+                          {PIPELINE_STAGE_OPTIONS.filter(stg => stg !== 'Won').map(stg => (
                             <option key={stg} value={stg}>{stg}</option>
                           ))}
                         </FormSelect>
@@ -4696,8 +5122,13 @@ export const LeadsPage = () => {
                         type="text"
                         value={formData.leadOwner}
                         onChange={handleInputChange}
+                        onBlur={() => handleBlur('leadOwner')}
                         placeholder="Enter lead owner"
+                        hasError={!!(touched.leadOwner && validationErrors.leadOwner)}
                       />
+                      {touched.leadOwner && validationErrors.leadOwner && (
+                        <FieldError>{validationErrors.leadOwner}</FieldError>
+                      )}
                     </FormGroup>
 
                     {/* 14. Estimated Deal Value (INR & AED dropdown with Auto USD Conversion) */}
@@ -4711,8 +5142,8 @@ export const LeadsPage = () => {
                           onChange={(e) => handleDealCurrencyChange(e.target.value as 'INR' | 'AED')}
                           style={{ fontWeight: 600 }}
                         >
-                          <option value="INR">🇮🇳 INR (₹)</option>
-                          <option value="AED">🇦🇪 AED (AED)</option>
+                          <option value="INR">INR</option>
+                          <option value="AED">AED</option>
                         </FormSelect>
                         <FormSelect
                           value={dealSelectedAmount}
@@ -4777,58 +5208,19 @@ export const LeadsPage = () => {
                       <FormInput
                         name="expectedCloseDate"
                         type="date"
+                        min={formData.dateCaptured ? toInputDateFormat(formData.dateCaptured) : todayDateStr}
                         value={formData.expectedCloseDate}
                         onChange={handleInputChange}
+                        onBlur={() => handleBlur('expectedCloseDate')}
+                        hasError={!!(touched.expectedCloseDate && validationErrors.expectedCloseDate)}
                       />
+                      {touched.expectedCloseDate && validationErrors.expectedCloseDate && (
+                        <FieldError>{validationErrors.expectedCloseDate}</FieldError>
+                      )}
                     </FormGroup>
 
-                    {/* SECTION 4: Follow-up, Status & Notes */}
-                    <FormSectionTitle>
-                      <span>📅</span>
-                      <span>4. Follow-up, Status & Notes</span>
-                    </FormSectionTitle>
-
-                    {/* 16. Last Contact Date */}
-                    <FormGroup>
-                      <FormLabel>Last Contact Date</FormLabel>
-                      <FormInput
-                        name="lastContactDate"
-                        type="date"
-                        value={formData.lastContactDate}
-                        onChange={handleInputChange}
-                      />
-                    </FormGroup>
-
-                    {/* 18. Status */}
-                    <FormGroup>
-                      <FormLabel>
-                        Last Contact Status <RequiredStar>*</RequiredStar>
-                      </FormLabel>
-                      <FormSelect
-                        name="status"
-                        value={formData.status}
-                        onChange={handleInputChange}
-                      >
-                        <option value="">-- Select Status --</option>
-                        {STATUS_OPTIONS.map(stat => (
-                          <option key={stat} value={stat}>{stat}</option>
-                        ))}
-                      </FormSelect>
-                    </FormGroup>
-
-                    {/* 17. Next Follow-up Date */}
-                    <FormGroup>
-                      <FormLabel>Next Follow-up Date</FormLabel>
-                      <FormInput
-                        name="nextFollowupDate"
-                        type="date"
-                        value={formData.nextFollowupDate}
-                        onChange={handleInputChange}
-                      />
-                    </FormGroup>
-
-                    {/* 19. Lost Reason */}
-                    {formData.pipelineStage === 'Lost' && (
+                    {/* Lost Reason (shown in Section 3 when editing and stage is Lost) */}
+                    {editingLeadId && formData.pipelineStage === 'Lost' && (
                       <FormGroup fullWidth>
                         <FormLabel>Lost Reason</FormLabel>
                         <FormInput
@@ -4840,17 +5232,90 @@ export const LeadsPage = () => {
                       </FormGroup>
                     )}
 
-                    {/* 17. Follow up Notes */}
-                    <FormGroup fullWidth>
-                      <FormLabel>Follow up Notes</FormLabel>
-                      <FormTextarea
-                        name="followupNotes"
-                        rows={3}
-                        value={formData.followupNotes}
-                        onChange={handleInputChange}
-                        placeholder="Enter latest conversation notes, customer requirements, plywood grade preferences, or delivery timelines..."
-                      />
-                    </FormGroup>
+                    {/* SECTION 4: Follow-up, Status & Notes (hidden in edit page) */}
+                    {!editingLeadId && (
+                      <>
+                        <FormSectionTitle>
+                          <span>📅</span>
+                          <span>4. Follow-up, Status & Notes</span>
+                        </FormSectionTitle>
+
+                        {/* 16. Last Contact Date */}
+                        <FormGroup>
+                          <FormLabel>Last Contact Date</FormLabel>
+                          <FormInput
+                            name="lastContactDate"
+                            type="date"
+                            value={formData.lastContactDate}
+                            onChange={handleInputChange}
+                          />
+                        </FormGroup>
+
+                        {/* 18. Last Contacted Status */}
+                        <FormGroup>
+                          <FormLabel>
+                            Last Contacted Status <RequiredStar>*</RequiredStar>
+                          </FormLabel>
+                          <FormSelect
+                            name="status"
+                            value={formData.status}
+                            onChange={handleInputChange}
+                            onBlur={() => handleBlur('status')}
+                            hasError={!!(touched.status && validationErrors.status)}
+                          >
+                            <option value="">-- Select Status --</option>
+                            {STATUS_OPTIONS.map(stat => (
+                              <option key={stat} value={stat}>{stat}</option>
+                            ))}
+                          </FormSelect>
+                          {touched.status && validationErrors.status && (
+                            <FieldError>{validationErrors.status}</FieldError>
+                          )}
+                        </FormGroup>
+
+                        {/* 17. Next Follow-up Date */}
+                        <FormGroup>
+                          <FormLabel>Next Follow-up Date</FormLabel>
+                          <FormInput
+                            name="nextFollowupDate"
+                            type="date"
+                            min={formData.lastContactDate ? getDayAfter(formData.lastContactDate) : todayDateStr}
+                            value={formData.nextFollowupDate}
+                            onChange={handleInputChange}
+                            onBlur={() => handleBlur('nextFollowupDate')}
+                            hasError={!!(touched.nextFollowupDate && validationErrors.nextFollowupDate)}
+                          />
+                          {touched.nextFollowupDate && validationErrors.nextFollowupDate && (
+                            <FieldError>{validationErrors.nextFollowupDate}</FieldError>
+                          )}
+                        </FormGroup>
+
+                        {/* 19. Lost Reason */}
+                        {formData.pipelineStage === 'Lost' && (
+                          <FormGroup fullWidth>
+                            <FormLabel>Lost Reason</FormLabel>
+                            <FormInput
+                              name="lostReason"
+                              value={formData.lostReason}
+                              onChange={handleInputChange}
+                              placeholder="Enter reason if lost or cold (e.g. Budget constraint, Competitor chosen)..."
+                            />
+                          </FormGroup>
+                        )}
+
+                        {/* 17. Last Contact Notes */}
+                        <FormGroup fullWidth>
+                          <FormLabel>Last Contact Notes</FormLabel>
+                          <FormTextarea
+                            name="followupNotes"
+                            rows={3}
+                            value={formData.followupNotes}
+                            onChange={handleInputChange}
+                            placeholder="Enter notes for last contact date, customer requirements, conversation summary, or delivery timelines..."
+                          />
+                        </FormGroup>
+                      </>
+                    )}
                     </FormGrid>
                   </fieldset>
 
@@ -4909,6 +5374,7 @@ export const LeadsPage = () => {
                       <FormLabel>Expected Close Date</FormLabel>
                       <FormInput 
                         type="date"
+                        min={leadToConvert?.dateCaptured ? toInputDateFormat(leadToConvert.dateCaptured) : todayDateStr}
                         value={dealFormCloseDate} 
                         onChange={e => setDealFormCloseDate(e.target.value)} 
                       />
